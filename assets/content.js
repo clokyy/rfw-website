@@ -16,7 +16,7 @@
   function renderProducts(d){
     const grid=document.getElementById('product-grid');if(!grid)return;
     const products=(d.products||[]).filter(p=>p.active!==false);
-    grid.innerHTML=products.map(p=>`<article class="product reveal in-view" data-category="${esc(p.category||'other')}"><div class="burst" style="--bg:${themes[p.theme]||themes.blue}"></div><div class="product-body"><div class="meta"><span>${p.code?`Code ${esc(p.code)}`:'Featured'}</span><span>${esc(p.type)}</span></div><h3>${esc(p.name)}</h3><p>${esc(p.details)}</p><div class="price">${esc(p.price)}</div></div></article>`).join('')||'<p>No products are currently listed. Please call for availability.</p>';
+    grid.innerHTML=products.map(p=>`<article class="product reveal in-view" data-category="${esc(p.category||'other')}"><div class="burst ${p.image?'has-image':''}" style="--bg:${themes[p.theme]||themes.blue}">${p.image?`<img src="${esc(p.image)}" alt="${esc(p.name)} product packaging" loading="lazy" width="800" height="800">`:''}</div><div class="product-body"><div class="meta"><span>${p.code?`Code ${esc(p.code)}`:'Featured'}</span><span>${esc(p.type)}</span></div><h3>${esc(p.name)}</h3><p>${esc(p.details)}</p><div class="price">${esc(p.price)}</div></div></article>`).join('')||'<p>No products are currently listed. Please call for availability.</p>';
     const runFilter=f=>grid.querySelectorAll('.product').forEach(p=>p.hidden=f!=='all'&&p.dataset.category!==f);
     document.querySelectorAll('.filter').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');runFilter(b.dataset.filter)}));
   }

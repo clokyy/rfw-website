@@ -36,5 +36,6 @@ collections:
               - {label: "Type / shot count", name: "type", widget: "string"}
               - {label: "Price", name: "price", widget: "string", hint: "Example: $69.99 or Call for price"}
               - {label: "Description", name: "details", widget: "text"}
-              - {label: "Card colour", name: "theme", widget: "select", options: ["blue", "sunset", "pink", "amber", "violet"], default: "blue"}
+              - {label: "Product image", name: "image", widget: "image", required: false, hint: "Upload a square product photo or choose an existing image."}
+              - {label: "Card colour", name: "theme", widget: "select", options: ["blue", "sunset", "pink", "amber", "violet"], default: "blue", hint: "Used when a product has no image."}
               - {label: "Show on website", name: "active", widget: "boolean", default: true}

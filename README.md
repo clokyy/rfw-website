@@ -9,7 +9,7 @@ A responsive, single-page static website redesign with lightweight JavaScript an
 - `/admin/` — Decap CMS admin panel
 
 ## Admin-managed content
-The admin panel edits `data/site.json` in GitHub. It can add, remove, reorder, hide, and edit products, and update the phone number, address, and email used across the website.
+The admin panel edits `data/site.json` in GitHub. It can add, remove, reorder, hide, and edit products (including product photos), and update the phone number, address, and email used across the website.
 
 The initial test email is `test@reginafireworks.ca`.
 
