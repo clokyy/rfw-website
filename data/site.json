@@ -8,6 +8,17 @@
   "email": "test@reginafireworks.ca",
   "products": [
     {
+      "name": "Big firework",
+      "code": "123",
+      "category": "miscellaneous",
+      "type": "",
+      "price": "$39.99",
+      "details": "OGTasoifdnaosidnjaoisdaosdj joijdoijsad",
+      "theme": "blue",
+      "active": true,
+      "image": "/assets/uploads/1790803633029-img-1202.jpg"
+    },
+    {
       "name": "10 Ball Roman Candle Multi",
       "code": "026",
       "category": "roman-candles-consumer-fireworks",
