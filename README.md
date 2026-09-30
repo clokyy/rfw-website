@@ -1,10 +1,10 @@
 # Regina Fireworks website
 
-A responsive, single-page static website redesign with lightweight JavaScript animations, scroll reveals, subtle parallax, sticky navigation, and reduced-motion support.
+A responsive Regina Fireworks redesign with lightweight JavaScript animations, cross-page transitions, scroll reveals, subtle parallax, sticky navigation, and reduced-motion support.
 
 ## Pages
 - `/` — responsive home page
-- `/products/` — featured catalogue adapted from the original website
+- `/products/` — complete 111-product catalogue with all 11 original subcategories, search, and progressive loading
 - `/safety/` — consumer firework safety guidance adapted from Natural Resources Canada
 - `/admin/` — Decap CMS admin panel
 

@@ -32,7 +32,21 @@ collections:
             fields:
               - {label: "Product name", name: "name", widget: "string"}
               - {label: "Product code", name: "code", widget: "string", required: false}
-              - {label: "Category", name: "category", widget: "select", options: [{label: "Cake", value: "cake"}, {label: "Other", value: "other"}]}
+              - label: "Category"
+                name: "category"
+                widget: "select"
+                options:
+                  - {label: "Roman Candles", value: "roman-candles-consumer-fireworks"}
+                  - {label: "Sound shells", value: "sound-shells"}
+                  - {label: "Barrages", value: "barrages-en"}
+                  - {label: "Maximum load mortars", value: "maximum-load-mortars"}
+                  - {label: "Multishots Cakes", value: "cakes-bombardos-consumer-fireworks"}
+                  - {label: "Angled Cakes", value: "angled-cakes"}
+                  - {label: "Fireworks Kits", value: "fireworks-kits"}
+                  - {label: "Ground Spinners", value: "ground-spinners"}
+                  - {label: "Fountains", value: "fountains"}
+                  - {label: "Sparklers", value: "sparklers-consumer-fireworks"}
+                  - {label: "Miscellaneous", value: "miscellaneous"}
               - {label: "Type / shot count", name: "type", widget: "string"}
               - {label: "Price", name: "price", widget: "string", hint: "Example: $69.99 or Call for price"}
               - {label: "Description", name: "details", widget: "text"}
