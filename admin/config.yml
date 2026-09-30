@@ -1,0 +1,40 @@
+backend:
+  name: github
+  repo: clokyy/rfw-website
+  branch: main
+
+media_folder: "assets/uploads"
+public_folder: "/assets/uploads"
+logo_url: "/assets/regina-fireworks-hero.jpg"
+show_preview_links: true
+
+collections:
+  - name: "site"
+    label: "Website"
+    files:
+      - name: "settings"
+        label: "Products & contact details"
+        file: "data/site.json"
+        format: "json"
+        fields:
+          - {label: "Phone number shown", name: "phone_display", widget: "string", hint: "Example: (306) 530-9239"}
+          - {label: "Phone number for links", name: "phone_link", widget: "string", hint: "Example: +13065309239"}
+          - {label: "Street address", name: "address_line1", widget: "string"}
+          - {label: "City", name: "city", widget: "string"}
+          - {label: "Province", name: "province", widget: "string"}
+          - {label: "Postal code", name: "postal_code", widget: "string"}
+          - {label: "Email", name: "email", widget: "string", pattern: ["^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$", "Enter a valid email address"]}
+          - label: "Products"
+            name: "products"
+            widget: "list"
+            label_singular: "Product"
+            summary: "{{fields.name}} — {{fields.price}}"
+            fields:
+              - {label: "Product name", name: "name", widget: "string"}
+              - {label: "Product code", name: "code", widget: "string", required: false}
+              - {label: "Category", name: "category", widget: "select", options: [{label: "Cake", value: "cake"}, {label: "Other", value: "other"}]}
+              - {label: "Type / shot count", name: "type", widget: "string"}
+              - {label: "Price", name: "price", widget: "string", hint: "Example: $69.99 or Call for price"}
+              - {label: "Description", name: "details", widget: "text"}
+              - {label: "Card colour", name: "theme", widget: "select", options: ["blue", "sunset", "pink", "amber", "violet"], default: "blue"}
+              - {label: "Show on website", name: "active", widget: "boolean", default: true}
