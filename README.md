@@ -6,21 +6,27 @@ A responsive Regina Fireworks redesign with lightweight JavaScript animations, c
 - `/` — responsive home page
 - `/products/` — complete 111-product catalogue with all 11 original subcategories, search, and progressive loading
 - `/safety/` — consumer firework safety guidance adapted from Natural Resources Canada
-- `/admin/` — Decap CMS admin panel
+- `/admin/` — custom username/password administration panel
 
 ## Admin-managed content
-The admin panel edits `data/site.json` in GitHub. It can add, remove, reorder, hide, and edit products (including product photos), and update the phone number, address, and email used across the website.
+The custom admin panel uses a simple username and password. Products and contact details are managed in separate sections. Product editing supports JPG, PNG, WebP, and GIF uploads only, with a 5 MB limit enforced in both the browser and server function.
 
-The initial test email is `test@reginafireworks.ca`.
+Changes are committed to `data/site.json` through a protected Netlify Function, which triggers a fresh deployment. The initial test email is `test@reginafireworks.ca`.
 
 ## Preview
-Serve the project through a local web server so the pages can load `data/site.json`. For example, run `python -m http.server 8000` and open `http://localhost:8000`.
+Serve the project through a local web server and open `/admin/?preview=1` to preview the dashboard without authentication. Preview mode cannot publish or upload files.
 
 ## Deploy on Netlify
-1. Create a new Netlify site from the `clokyy/rfw-website` GitHub repository. No build command is required; the publish directory is `.`.
-2. Create a GitHub OAuth App. Use the Netlify site URL as the homepage URL and `https://api.netlify.com/auth/done` as the callback URL.
-3. In the Netlify site settings, add GitHub as an OAuth authentication provider using the app's client ID and secret.
-4. Open `/admin/` on the deployed site and sign in with a GitHub account that has push access to the repository.
+1. Create a Netlify site from `clokyy/rfw-website`. No build command is required; the publish directory is `.`.
+2. In **Project configuration → Environment variables**, add:
+   - `ADMIN_USERNAME` — the admin username.
+   - `ADMIN_PASSWORD` — a strong admin password.
+   - `SESSION_SECRET` — a long random value used to sign secure login cookies.
+   - `GITHUB_TOKEN` — a fine-grained GitHub token restricted to this repository with **Contents: Read and write**.
+3. Trigger a new deployment so the functions receive the environment variables.
+4. Open `/admin/` and sign in with the configured username and password.
+
+The credentials and GitHub token remain server-side in Netlify. Never commit them to this repository. The previous GitHub OAuth/Decap setup is no longer used.
 
 Netlify serves the folder routes without `.html`; legacy `/products.html` and `/safety.html` links redirect to the clean URLs.
 
