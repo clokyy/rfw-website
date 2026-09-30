@@ -1,18 +1,81 @@
 {
-  "phone_display": "(306) 530-9239",
-  "phone_link": "+13065309239",
+  "phone_display": "(306) 123-4567",
+  "phone_link": "+13061234567",
   "address_line1": "40 Sandison Cres.",
   "city": "Regina",
   "province": "Saskatchewan",
   "postal_code": "S4R 6R9",
   "email": "test@reginafireworks.ca",
   "products": [
-    {"name":"Blue Peony","code":"173","category":"other","type":"Loaded mortar","price":"Call for price","details":"Loaded mortar that produces a blue floral burst with a tail.","theme":"blue","active":true},
-    {"name":"Flying Lanterns","code":"","category":"other","type":"Lantern","price":"$6.99","details":"A warm, floating light for special moments. Confirm local rules before use.","theme":"sunset","active":true},
-    {"name":"Malevolent","code":"350","category":"cake","type":"40 shots","price":"$69.99","details":"Red, purple, green, and blue bursts, each paired with white strobe effects.","theme":"pink","active":true},
-    {"name":"Screech Owl","code":"497","category":"cake","type":"30 shots","price":"$79.99","details":"Fan-shape cake with whistling tails to red, blue, and crackling stars.","theme":"amber","active":true},
-    {"name":"Outlaw","code":"372","category":"cake","type":"35 shots","price":"$74.99","details":"Fan-shape cake with brocade crowns, blue stars, and white glitter.","theme":"blue","active":true},
-    {"name":"Mad Howler","code":"506","category":"cake","type":"30 shots","price":"$65.99","details":"Whistling tails rising into bright bursts with crackling effects.","theme":"pink","active":true},
-    {"name":"Air Raid","code":"371","category":"cake","type":"25 shots","price":"$64.99","details":"Fan-shape sequence of silver whirls finishing in blue peony bursts.","theme":"blue","active":true}
+    {
+      "name": "Blue Peony",
+      "code": "173",
+      "category": "other",
+      "type": "Loaded mortar",
+      "price": "Call for price",
+      "details": "Loaded mortar that produces a blue floral burst with a tail.",
+      "theme": "blue",
+      "active": true
+    },
+    {
+      "name": "Flying Lanterns",
+      "code": "",
+      "category": "other",
+      "type": "Lantern",
+      "price": "$6.99",
+      "details": "A warm, floating light for special moments. Confirm local rules before use.",
+      "theme": "sunset",
+      "active": true
+    },
+    {
+      "name": "Malevolent",
+      "code": "350",
+      "category": "cake",
+      "type": "40 shots",
+      "price": "$69.99",
+      "details": "Red, purple, green, and blue bursts, each paired with white strobe effects.",
+      "theme": "pink",
+      "active": true
+    },
+    {
+      "name": "Screech Owl",
+      "code": "497",
+      "category": "cake",
+      "type": "30 shots",
+      "price": "$79.99",
+      "details": "Fan-shape cake with whistling tails to red, blue, and crackling stars.",
+      "theme": "amber",
+      "active": true
+    },
+    {
+      "name": "Outlaw",
+      "code": "372",
+      "category": "cake",
+      "type": "35 shots",
+      "price": "$74.99",
+      "details": "Fan-shape cake with brocade crowns, blue stars, and white glitter.",
+      "theme": "blue",
+      "active": true
+    },
+    {
+      "name": "Mad Howler",
+      "code": "506",
+      "category": "cake",
+      "type": "30 shots",
+      "price": "$65.99",
+      "details": "Whistling tails rising into bright bursts with crackling effects.",
+      "theme": "pink",
+      "active": true
+    },
+    {
+      "name": "Air Raid",
+      "code": "371",
+      "category": "cake",
+      "type": "25 shots",
+      "price": "$64.99",
+      "details": "Fan-shape sequence of silver whirls finishing in blue peony bursts.",
+      "theme": "blue",
+      "active": true
+    }
   ]
 }
