@@ -1,6 +1,6 @@
 # Regina Fireworks website
 
-A responsive, single-page static website redesign.
+A responsive, single-page static website redesign with lightweight JavaScript animations, scroll reveals, subtle parallax, sticky navigation, and reduced-motion support.
 
 ## Preview
 Open `index.html` in any modern browser.
