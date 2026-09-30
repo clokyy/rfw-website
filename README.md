@@ -9,9 +9,11 @@ A responsive Regina Fireworks redesign with lightweight JavaScript animations, c
 - `/admin/` — custom username/password administration panel
 
 ## Admin-managed content
-The custom admin panel uses a simple username and password. Products and contact details are managed in separate sections. Product editing supports JPG, PNG, WebP, and GIF uploads only, with a 5 MB limit enforced in both the browser and server function.
+The custom admin panel uses a simple username and password. The environment-variable account is the protected owner; after signing in, the owner or another administrator can add, remove, and reset passwords for additional administrators in the dedicated **Administrators** section. Additional accounts are stored in Netlify Blobs with unique salts and scrypt password hashes—never in GitHub.
 
-Changes are committed to `data/site.json` through a protected Netlify Function, which triggers a fresh deployment. The initial test email is `test@reginafireworks.ca`.
+Products and contact details are managed in separate sections. Product editing supports JPG, PNG, WebP, and GIF uploads only, with a 5 MB limit enforced in both the browser and server function.
+
+Website changes are committed to `data/site.json` through a protected Netlify Function, which triggers a fresh deployment. The initial test email is `test@reginafireworks.ca`.
 
 ## Preview
 Serve the project through a local web server and open `/admin/?preview=1` to preview the dashboard without authentication. Preview mode cannot publish or upload files.
