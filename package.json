@@ -1,8 +1,5 @@
 {
   "name": "regina-fireworks-website",
   "private": true,
-  "version": "1.0.0",
-  "dependencies": {
-    "@netlify/blobs": "^11.1.2"
-  }
+  "version": "1.0.0"
 }

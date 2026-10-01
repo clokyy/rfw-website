@@ -8,7 +8,7 @@ function validate(input){
  if(!/^\S+@\S+\.\S+$/.test(out.email))throw new Error('Enter a valid email address');
  for(const p of d.products){
   const image=clean(p.image,1200);if(image&&!(/^https:\/\//.test(image)||/^\/assets\/uploads\/[a-zA-Z0-9._-]+$/.test(image)))throw new Error(`Invalid image path for ${clean(p.name)}`);
-  out.products.push({name:clean(p.name),code:clean(p.code,60),category:clean(p.category,100),type:clean(p.type,100),price:clean(p.price,60),details:clean(p.details,2000),theme:clean(p.theme,30)||'blue',active:p.active!==false,image});
+  const inventory=p.inventory==null||p.inventory===''?null:Number(p.inventory);if(inventory!==null&&(!Number.isInteger(inventory)||inventory<0))throw new Error(`Invalid inventory for ${clean(p.name)}`);out.products.push({name:clean(p.name),code:clean(p.code,60),category:clean(p.category,100),type:clean(p.type,100),price:clean(p.price,60),inventory,details:clean(p.details,2000),theme:clean(p.theme,30)||'blue',active:p.active!==false,image});
  }
  return out;
 }

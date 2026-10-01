@@ -9,9 +9,9 @@ A responsive Regina Fireworks redesign with lightweight JavaScript animations, c
 - `/admin/` — custom username/password administration panel
 
 ## Admin-managed content
-The custom admin panel uses a simple username and password. The environment-variable account is the protected owner; after signing in, the owner or another administrator can add, remove, and reset passwords for additional administrators in the dedicated **Administrators** section. Additional accounts are stored in Netlify Blobs with unique salts and scrypt password hashes—never in GitHub.
+The custom admin panel uses a simple username and password. The environment-variable account is the protected owner; after signing in, the owner or another administrator can add, remove, and reset passwords for additional administrators in the dedicated **Administrators** section. Additional accounts use unique salts and scrypt password hashes. The account records are then encrypted with AES-256-GCM using `SESSION_SECRET` and saved to `data/admin-users.enc.json` through the existing GitHub connection. Keep `SESSION_SECRET` unchanged; changing it makes existing additional-account records unreadable.
 
-Products and contact details are managed in separate sections. Product editing supports JPG, PNG, WebP, and GIF uploads only, with a 5 MB limit enforced in both the browser and server function.
+Products and contact details are managed in separate sections. Each product can have a non-negative whole-number inventory value; inventory `0` displays a Sold out ribbon on its public product image, while a blank value leaves inventory untracked. Product editing supports JPG, PNG, WebP, and GIF uploads only, with a 5 MB limit enforced in both the browser and server function.
 
 Website changes are committed to `data/site.json` through a protected Netlify Function, which triggers a fresh deployment. The initial test email is `test@reginafireworks.ca`.
 
