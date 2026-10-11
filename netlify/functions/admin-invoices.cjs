@@ -8,6 +8,10 @@ function decrypt(value){if(value.version!==1)throw new Error('Unsupported invoic
 async function read(path){const f=await github(`contents/${path}?ref=${encodeURIComponent(BRANCH)}`);return JSON.parse(Buffer.from(f.content,'base64').toString('utf8'))}
 function cents(v){if(!/^\d{1,7}(\.\d{1,2})?$/.test(String(v)))throw new Error('Enter a valid unit price (up to two decimals)');return Math.round(Number(v)*100)}
 function date(v){if(!/^\d{4}-\d{2}-\d{2}$/.test(v)||new Date(v+'T00:00:00Z').toISOString().slice(0,10)!==v)throw new Error('Invalid due date');return v}
+function customerDetails(c){
+ const out={name:clean(c.name),email:clean(c.email),phone:clean(c.phone,60),streetAddress:clean(c.streetAddress),unit:clean(c.unit,100),city:clean(c.city,100),province:clean(c.province,100),postalCode:clean(c.postalCode,20).toUpperCase(),country:clean(c.country,100)};
+ out.address=c.streetAddress!==undefined?[out.streetAddress,out.unit,[out.city,out.province,out.postalCode].filter(Boolean).join(', '),out.country].filter(Boolean).join('\n'):clean(c.address,1000);return out;
+}
 function build(input,site,creator){
  if(!clean(input.customer?.name))throw new Error('Customer name is required');
  if(!Array.isArray(input.items)||!input.items.length||input.items.length>100)throw new Error('Select between 1 and 100 products');
@@ -15,7 +19,7 @@ function build(input,site,creator){
  const subtotal=items.reduce((s,l)=>s+l.total,0);if(subtotal>100000000)throw new Error('Invoice total exceeds the $1,000,000 limit');
  const taxRates=['gstRate','pstRate'].map(k=>{const v=String(input[k]??'0');if(!/^\d{1,2}(\.\d{1,2})?$/.test(v)||Number(v)>25)throw new Error('Tax rates must be between 0 and 25%');return Number(v)});
  const gst=Math.round(subtotal*taxRates[0]/100),pst=Math.round(subtotal*taxRates[1]/100),id=crypto.randomUUID(),createdAt=new Date().toISOString();
- return {id,number:`RF-${createdAt.slice(0,10).replace(/-/g,'')}-${id.slice(0,8).toUpperCase()}`,createdAt,createdBy:creator.username,creatorName:creator.displayName,creatorId:creator.id||creator.username,currency:'CAD',dueDate:input.dueDate?date(input.dueDate):null,customer:{name:clean(input.customer.name),email:clean(input.customer.email),phone:clean(input.customer.phone,60),address:clean(input.customer.address,1000)},seller:{name:'Regina Fireworks',address:clean([site.address_line1,[site.city,site.province,site.postal_code].filter(Boolean).join(', ')].filter(Boolean).join('\n'),1000),phone:site.phone_display,email:site.email},items,subtotal,gstRate:taxRates[0],pstRate:taxRates[1],gst,pst,total:subtotal+gst+pst,notes:clean(input.notes,2000)};
+ return {id,number:`RF-${createdAt.slice(0,10).replace(/-/g,'')}-${id.slice(0,8).toUpperCase()}`,createdAt,createdBy:creator.username,creatorName:creator.displayName,creatorId:creator.id||creator.username,currency:'CAD',dueDate:input.dueDate?date(input.dueDate):null,customer:customerDetails(input.customer),seller:{name:'Regina Fireworks',address:clean([site.address_line1,[site.city,site.province,site.postal_code].filter(Boolean).join(', ')].filter(Boolean).join('\n'),1000),phone:site.phone_display,email:site.email},items,subtotal,gstRate:taxRates[0],pstRate:taxRates[1],gst,pst,total:subtotal+gst+pst,notes:clean(input.notes,2000)};
 }
 exports.handler=async event=>{
  const session=getSession(event);if(!session)return json(401,{error:'Authentication required'});
