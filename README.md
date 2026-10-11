@@ -39,3 +39,8 @@ Netlify serves the folder routes without `.html`; legacy `/products.html` and `/
 - Add an email address if desired.
 - Replace or expand product content when a current inventory list is available.
 - Connect analytics and a custom domain through the chosen host.
+
+## Invoices
+The **Invoices** section supports a product-based invoice builder, customer/billing details, quantities, editable unit prices, optional due dates, GST/PST rates, payment notes, and print / Save PDF. Amounts are in CAD; tax rates default to 0 and must be confirmed by the administrator. Saved invoices are immutable snapshots of seller details, products, prices, and creator identity. The server computes totals in integer cents and assigns the signed-in administrator (never a creator supplied by the browser). The invoice register filters by local creation date, administrator, and minimum/maximum order total. All active administrators can view the register.
+
+Invoice records are AES-256-GCM encrypted using `SESSION_SECRET` and saved individually under `data/invoices/<uuid>.json` through the same GitHub token. Keep this secret unchanged and back it up securely; rotating it without migration makes account and invoice records unreadable. Invoice commits use `[skip ci]` to avoid unnecessary website rebuilds. Product/contact changes still require **Save changes**; invoice creation saves immediately and uses the published catalogue. Creating invoices does **not** decrement inventory or collect payment. Local preview invoices are temporary and disappear on refresh. This GitHub-backed register is intended for low-volume use (GitHub directory listings support up to 1,000 files); move invoice storage to a database before approaching that limit.
