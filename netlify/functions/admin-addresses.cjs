@@ -12,6 +12,7 @@ exports.handler=async event=>{
   const text=clean(input.text);if(text.length<3)return json(200,{suggestions:[]});
   const params=new URLSearchParams({text,format:'json',limit:'5',lang:'en',filter:'countrycode:ca',bias:'proximity:-104.6189,50.4452',apiKey:key});
   const response=await fetch('https://api.geoapify.com/v1/geocode/autocomplete?'+params,{signal:AbortSignal.timeout(5000)});
+  if(response.status===401||response.status===403)return json(502,{error:'Geoapify rejected the API key. Check GEOAPIFY_API_KEY and its server-side access restrictions in Netlify; you can enter the address manually.'});
   if(!response.ok)return json(response.status===429?429:502,{error:response.status===429?'Address lookup limit reached. Please enter the address manually.':'Address suggestions are temporarily unavailable. Please enter the address manually.'});
   const result=await response.json();const suggestions=(Array.isArray(result.results)?result.results:[]).slice(0,5).map(p=>({label:clean(p.formatted,500),street:clean(p.address_line1||[p.housenumber,p.street].filter(Boolean).join(' ')),city:clean(p.city||p.town||p.village||p.municipality,100),province:clean(p.state||p.state_code,100),postalCode:clean(p.postcode,20).toUpperCase(),country:clean(p.country||'Canada',100)})).filter(p=>p.label&&p.street);
   return json(200,{suggestions});
