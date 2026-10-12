@@ -1,0 +1,8 @@
+/* Native cross-document transitions, with a JS fallback for older browsers. */
+@view-transition{navigation:auto}
+::view-transition-group(root){animation-duration:420ms;animation-timing-function:cubic-bezier(.22,1,.36,1)}
+::view-transition-old(root){animation:site-page-out 180ms ease-in both;mix-blend-mode:normal}
+::view-transition-new(root){animation:site-page-in 420ms cubic-bezier(.22,1,.36,1) both;mix-blend-mode:normal}
+@keyframes site-page-out{to{opacity:0}}
+@keyframes site-page-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){@view-transition{navigation:none}::view-transition-group(root),::view-transition-old(root),::view-transition-new(root){animation:none!important}}

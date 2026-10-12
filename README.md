@@ -54,3 +54,10 @@ Invoice printing uses a compact 9.5-point layout, 10 mm margins, tighter line it
 
 ## Admin startup and sign-in transition
 The admin page starts with a neutral session-check screen, with the login form hidden in the initial HTML. An authenticated refresh loads the dashboard directly without flashing the login page; unauthenticated or expired sessions show sign-in. Temporary network/loading failures show a retry action rather than implying a logout, and do not clear the session cookie. Successful sign-in fades the login overlay out while the dashboard enters; reduced-motion preferences disable the movement. The existing secure, HttpOnly eight-hour session cookie and server-side access checks are unchanged; no authentication token or private dashboard data is cached in browser storage.
+
+## Public navigation, product deletion, and browser autofill
+Public pages share cross-document view-transition styles; supporting browsers animate navigation natively, while older browsers use a short fade-out/slide-in fallback. Hash links, external URLs, new-tab/modifier clicks, downloads, and reduced-motion preferences keep normal browser behavior. Browser back/forward restores the page without leaving it faded out. Transitions no longer run twice through the content script.
+
+Removing products opens an accessible in-page confirmation dialog with the product name, a safe **Keep product** default, Escape dismissal, and a reminder that changes become public only after **Save changes**.
+
+Administrator-creation fields and invoice customer/billing fields request `autocomplete="off"`; account creation also supplies opt-out hints for common third-party password managers. Normal admin sign-in retains username/current-password autocomplete. These are hints, not a guarantee: Chrome and password managers may ignore them. To stop save prompts completely on a workstation, disable address saving/filling and password-save offers in that browser's settings. No hidden dummy fields or focus/readonly hacks are used, so manual entry and keyboard accessibility remain intact.

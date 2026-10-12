@@ -30,12 +30,6 @@
     search?.addEventListener('input',()=>{query=search.value;limit=18;draw()});
     more?.addEventListener('click',()=>{limit+=18;draw()});draw();
   }
-  function setupPageTransitions(){
-    const style=document.createElement('style');style.textContent='@view-transition{navigation:auto}body{transition:opacity .28s ease,transform .28s ease}body.page-before-enter{opacity:0;transform:translateY(8px)}body.page-leave{opacity:0;transform:translateY(-8px)}@media(prefers-reduced-motion:reduce){body{transition:none!important}}';document.head.appendChild(style);
-    if(!reduced){document.body.classList.add('page-before-enter');requestAnimationFrame(()=>requestAnimationFrame(()=>document.body.classList.remove('page-before-enter')))}
-    document.addEventListener('click',e=>{const a=e.target.closest('a');if(!a||e.defaultPrevented||e.button>0||e.metaKey||e.ctrlKey||e.shiftKey||a.target==='_blank'||a.hasAttribute('download'))return;const href=a.getAttribute('href');if(!href||href.startsWith('#')||href.startsWith('tel:')||href.startsWith('mailto:'))return;const u=new URL(a.href,location.href);if(u.origin!==location.origin||u.pathname===location.pathname)return;if(reduced)return;e.preventDefault();document.body.classList.add('page-leave');setTimeout(()=>location.href=u.href,220)});
-    addEventListener('pageshow',()=>document.body.classList.remove('page-leave'));
-  }
   function setupUI(){
     const menu=document.querySelector('.menu'),links=document.querySelector('.navlinks');
     if(menu&&links){menu.addEventListener('click',()=>{const o=links.classList.toggle('open');menu.setAttribute('aria-expanded',o)});links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>links.classList.remove('open')))}
@@ -44,5 +38,5 @@
     const header=document.querySelector('.header'),hero=document.querySelector('.hero');let ticking=false;
     addEventListener('scroll',()=>{if(ticking)return;ticking=true;requestAnimationFrame(()=>{header?.classList.toggle('scrolled',scrollY>80);if(hero&&!reduced&&scrollY<hero.offsetHeight)hero.style.setProperty('--hero-y',`${Math.min(scrollY*.11,58)}px`);ticking=false})},{passive:true});
   }
-  setupPageTransitions();setupUI();loadData().then(d=>{applyContact(d);renderProducts(d);window.siteData=d});
+  setupUI();loadData().then(d=>{applyContact(d);renderProducts(d);window.siteData=d});
 })();
