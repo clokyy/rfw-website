@@ -4,14 +4,43 @@
  const allowed=['image/jpeg','image/png','image/webp','image/gif'],preview=location.hostname==='localhost'||location.hostname==='127.0.0.1';
  let state={data:null,sha:null,editing:-1,file:null,dirty:false,admins:[],currentAdmin:'',currentUser:null};
  const toast=msg=>{const t=$('#toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)};
- async function api(path,options={}){const r=await fetch('/.netlify/functions/'+path,{headers:{'Content-Type':'application/json',...(options.headers||{})},...options});const b=await r.json().catch(()=>({error:'Unexpected server response'}));if(!r.ok)throw new Error(b.error||'Request failed');return b}
- async function boot(){
-  if(preview&&new URLSearchParams(location.search).has('preview')){const r=await fetch('/data/site.json');state.data=await r.json();state.sha='preview';showDashboard();$('#save-all').disabled=true;$('#save-status').textContent='Local preview mode';return}
-  try{const a=await api('admin-auth');if(a.authenticated)await load()}catch{}
+ async function api(path,options={}){const r=await fetch('/.netlify/functions/'+path,{headers:{'Content-Type':'application/json',...(options.headers||{})},...options});const b=await r.json().catch(()=>({error:'Unexpected server response'}));if(!r.ok){const error=new Error(b.error||'Request failed');error.status=r.status;throw error}return b}
+ function showLogin(message=''){
+  $('#admin-startup').hidden=true;$('#admin-startup').setAttribute('aria-busy','false');$('#dashboard').hidden=true;$('#login-view').hidden=false;$('#login-view').inert=false;$('#login-error').textContent=message;
  }
- $('#login-form').addEventListener('submit',async e=>{e.preventDefault();$('#login-error').textContent='';const f=new FormData(e.currentTarget);try{await api('admin-auth',{method:'POST',body:JSON.stringify({firstName:f.get('firstName'),lastName:f.get('lastName'),username:f.get('username'),password:f.get('password')})});await load()}catch(err){$('#login-error').textContent=err.message}});
- async function load(){const r=await api('admin-data');state.data=r.data;state.sha=r.sha;showDashboard()}
- function showDashboard(){$('#login-view').hidden=true;$('#dashboard').hidden=false;fillContact();renderProducts();loadAdmins();document.dispatchEvent(new CustomEvent('rfw-dashboard',{detail:{data:state.data,preview}}))}
+ async function boot(){
+  $('#admin-startup').hidden=false;$('#admin-startup').setAttribute('aria-busy','true');$('#startup-retry').hidden=true;$('#startup-status').textContent='Checking your secure session…';$('#login-view').hidden=true;
+  try{
+   if(preview&&new URLSearchParams(location.search).has('preview')){const r=await fetch('/data/site.json',{signal:AbortSignal.timeout(12000)});if(!r.ok)throw new Error('Unable to load the local preview');state.data=await r.json();state.sha='preview';await showDashboard();$('#save-all').disabled=true;$('#save-status').textContent='Local preview mode';return}
+   const a=await api('admin-auth',{signal:AbortSignal.timeout(12000)});
+   if(!a.authenticated){showLogin();return}
+   $('#startup-status').textContent='Loading your dashboard…';await load();
+  }catch(err){
+   if(err.status===401){showLogin('Your session has expired. Please sign in again.');return}
+   $('#admin-startup').setAttribute('aria-busy','false');$('#startup-status').textContent='Unable to open the admin panel right now. Your session has not been cleared. Check your connection and try again.';$('#startup-retry').hidden=false;
+  }
+ }
+ $('#startup-retry').addEventListener('click',boot);
+ $('#login-form').addEventListener('submit',async e=>{
+  e.preventDefault();$('#login-error').textContent='';const form=e.currentTarget,f=new FormData(form),button=form.querySelector('button[type="submit"]');button.disabled=true;button.textContent='Signing in…';
+  try{await api('admin-auth',{method:'POST',signal:AbortSignal.timeout(12000),body:JSON.stringify({username:f.get('username'),password:f.get('password')})});button.textContent='Opening dashboard…';await load(true);form.reset()}
+  catch(err){$('#login-error').textContent=err.name==='TimeoutError'||err.name==='AbortError'?'Sign-in took too long. Please try again.':err.message}
+  finally{button.disabled=false;button.textContent='Sign in'}
+ });
+ async function load(animateLogin=false){const r=await api('admin-data',{signal:AbortSignal.timeout(12000)});state.data=r.data;state.sha=r.sha;await showDashboard(animateLogin)}
+ async function showDashboard(animateLogin=false){
+  fillContact();renderProducts();await loadAdmins();document.dispatchEvent(new CustomEvent('rfw-dashboard',{detail:{data:state.data,preview}}));
+  const login=$('#login-view'),dashboard=$('#dashboard'),motion=!matchMedia('(prefers-reduced-motion: reduce)').matches;
+  $('#admin-startup').hidden=true;$('#admin-startup').setAttribute('aria-busy','false');
+  if(animateLogin&&motion&&typeof login.animate==='function'){
+   login.classList.add('login-transition');login.inert=true;dashboard.hidden=false;
+   const exit=login.animate([{opacity:1},{opacity:0}],{duration:280,easing:'ease-in',fill:'forwards'});
+   const card=login.querySelector('.login-card').animate([{transform:'translateY(0) scale(1)'},{transform:'translateY(-12px) scale(.985)'}],{duration:280,easing:'ease-in',fill:'forwards'});
+   const entry=dashboard.animate([{opacity:0,transform:'translateY(12px)'},{opacity:1,transform:'translateY(0)'}],{duration:420,delay:100,easing:'cubic-bezier(.22,1,.36,1)',fill:'both'});
+   await exit.finished.catch(()=>{});login.hidden=true;login.classList.remove('login-transition');exit.cancel();card.cancel();await entry.finished.catch(()=>{});entry.cancel();
+  }else{login.hidden=true;dashboard.hidden=false;if(motion&&typeof dashboard.animate==='function')dashboard.animate([{opacity:0},{opacity:1}],{duration:180,easing:'ease-out'})}
+  if(animateLogin)$('#view-title').focus({preventScroll:true});
+ }
  function fillContact(){$$('[data-field]').forEach(i=>{i.value=state.data[i.dataset.field]||'';i.addEventListener('input',()=>{state.data[i.dataset.field]=i.value;dirty()})})}
  function dirty(){state.dirty=true;$('#save-status').textContent='Unsaved changes'}
  function renderProducts(){const q=$('#admin-search').value.toLowerCase().trim(),items=state.data.products.map((p,i)=>({p,i})).filter(({p})=>!q||[p.name,p.code,p.type,p.price,p.inventory].some(v=>String(v??'').toLowerCase().includes(q)));$('#product-summary').textContent=`${items.length} of ${state.data.products.length} products`;
@@ -22,7 +51,7 @@
  const select=$('#product-form').elements.category;select.innerHTML=categories.map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
  $('#photo-file').addEventListener('change',e=>{const file=e.target.files[0];if(!file)return;if(!allowed.includes(file.type)){e.target.value='';return toast('Only JPG, PNG, WebP, and GIF images are allowed')}if(file.size>5*1024*1024){e.target.value='';return toast('Image must be smaller than 5 MB')}state.file=file;$('#photo-preview').src=URL.createObjectURL(file)});
  $('#product-form').addEventListener('submit',async e=>{e.preventDefault();if(e.submitter?.value==='cancel'){return $('#product-dialog').close()}const f=e.currentTarget,button=$('#save-product');button.disabled=true;button.textContent='Saving…';try{let image=f.elements.image.value;if(state.file){if(preview)image=URL.createObjectURL(state.file);else{const data=await toDataUrl(state.file);const r=await api('admin-media',{method:'POST',body:JSON.stringify({filename:state.file.name,mimeType:state.file.type,data})});image=r.path}}const inventory=f.elements.inventory.value===''?null:Number(f.elements.inventory.value);if(inventory!==null&&(!Number.isInteger(inventory)||inventory<0))throw new Error('Inventory must be a whole number of 0 or more');const product={name:f.elements.name.value.trim(),code:f.elements.code.value.trim(),category:f.elements.category.value,type:f.elements.type.value.trim(),price:f.elements.price.value.trim(),inventory,details:f.elements.details.value.trim(),theme:'blue',active:f.elements.active.checked,image};if(!product.name)throw new Error('Product name is required');if(state.editing<0)state.data.products.unshift(product);else state.data.products[state.editing]=product;dirty();renderProducts();$('#product-dialog').close();toast('Product saved locally—publish changes when ready')}catch(err){toast(err.message)}finally{button.disabled=false;button.textContent='Save product'}});
- async function loadAdmins(){try{if(preview){state.currentAdmin='owner';state.currentUser={username:'owner',firstName:'Preview',lastName:'Owner',displayName:'Preview Owner'};state.admins=[{username:'owner',firstName:'Preview',lastName:'Owner',displayName:'Preview Owner',role:'Owner',protected:true},{username:'store-manager',firstName:'Store',lastName:'Manager',displayName:'Store Manager',role:'Administrator',protected:false}]}else{const r=await api('admin-users');state.admins=r.users;state.currentAdmin=r.current;state.currentUser=r.currentUser}renderCurrentUser();renderAdmins()}catch(err){toast(err.message)}}
+ async function loadAdmins(){try{if(preview){state.currentAdmin='owner';state.currentUser={username:'owner',firstName:'Preview',lastName:'Owner',displayName:'Preview Owner'};state.admins=[{username:'owner',firstName:'Preview',lastName:'Owner',displayName:'Preview Owner',role:'Owner',protected:true},{username:'store-manager',firstName:'Store',lastName:'Manager',displayName:'Store Manager',role:'Administrator',protected:false}]}else{const r=await api('admin-users',{signal:AbortSignal.timeout(8000)});state.admins=r.users;state.currentAdmin=r.current;state.currentUser=r.currentUser}renderCurrentUser();renderAdmins()}catch(err){toast(err.message)}}
  function renderCurrentUser(){const name=state.currentUser?.displayName||state.currentAdmin||'Administrator';const hello=$('#hello-admin'),logged=$('#logged-in-as');if(hello)hello.textContent=`Hello ${name}`;if(logged)logged.textContent=`Logged in as ${name}`}
  function renderAdmins(){$('#admin-list').innerHTML=state.admins.map(u=>`<article class="admin-row"><div><div class="admin-user">${escapeHtml(u.displayName||u.username)}${u.username===state.currentAdmin?' (you)':''}</div><div class="admin-role">${escapeHtml(u.role)} · ${escapeHtml(u.username)}${u.createdAt?` · Added ${new Date(u.createdAt).toLocaleDateString()}`:''}</div></div><span class="badge ${u.protected?'':'off'}">${u.protected?'Protected owner':'Administrator'}</span><div class="admin-actions">${u.protected?'':`<button class="secondary" data-reset-admin="${escapeHtml(u.username)}">Reset password</button>${u.username===state.currentAdmin?'':`<button class="danger" data-remove-admin="${escapeHtml(u.username)}">Remove</button>`}`}</div></article>`).join('')}
  $('#add-admin').addEventListener('click',()=>{$('#admin-form').reset();$('#admin-dialog').showModal()});
