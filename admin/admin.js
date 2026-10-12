@@ -59,7 +59,27 @@
  $('#add-admin').addEventListener('click',()=>{$('#admin-form').reset();$('#admin-dialog').showModal()});
  $('#admin-form').addEventListener('submit',async e=>{e.preventDefault();if(e.submitter?.value==='cancel')return $('#admin-dialog').close();if(preview)return toast('Account changes are disabled in preview mode');const f=new FormData(e.currentTarget),b=$('#create-admin');b.disabled=true;b.textContent='Creating…';try{await api('admin-users',{method:'POST',body:JSON.stringify({firstName:f.get('firstName'),lastName:f.get('lastName'),username:f.get('username'),password:f.get('password')})});$('#admin-dialog').close();await loadAdmins();toast('Administrator added')}catch(err){toast(err.message)}finally{b.disabled=false;b.textContent='Create administrator'}});
  $('#admin-list').addEventListener('click',async e=>{const remove=e.target.closest('[data-remove-admin]'),reset=e.target.closest('[data-reset-admin]');if(!remove&&!reset)return;if(preview)return toast('Account changes are disabled in preview mode');const username=(remove||reset).dataset[remove?'removeAdmin':'resetAdmin'];try{if(remove){if(!confirm(`Remove administrator ${username}?`))return;await api('admin-users',{method:'DELETE',body:JSON.stringify({username})});toast('Administrator removed')}else{const password=prompt(`Enter a new password for ${username} (minimum 12 characters):`);if(!password)return;await api('admin-users',{method:'PUT',body:JSON.stringify({username,password})});toast('Password reset')}await loadAdmins()}catch(err){toast(err.message)}});
- $$('.nav-item').forEach(b=>b.addEventListener('click',()=>{$$('.nav-item').forEach(x=>x.classList.toggle('active',x===b));const view=b.dataset.view;$('#products-view').hidden=view!=='products';$('#contact-view').hidden=view!=='contact';$('#admins-view').hidden=view!=='admins';$('#invoices-view').hidden=view!=='invoices';$('#view-title').textContent={products:'Products',contact:'Contact details',admins:'Administrators',invoices:'Invoices'}[view];if(view==='admins')loadAdmins()}));
+ let currentView='products',panelTransition=null,titleTransition=null;
+ const adminViews={products:'Products',contact:'Contact details',admins:'Administrators',invoices:'Invoices'};
+ function switchAdminView(view){
+  if(!adminViews[view]||view===currentView)return;
+  panelTransition?.cancel();titleTransition?.cancel();currentView=view;
+  $$('.nav-item').forEach(button=>{const active=button.dataset.view===view;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current')});
+  Object.keys(adminViews).forEach(key=>{$('#'+key+'-view').hidden=key!==view});
+  const panel=$('#'+view+'-view'),title=$('#view-title');title.textContent=adminViews[view];
+  // Animate only the new panel and title; the sidebar stays fixed and input values survive.
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&typeof panel.animate==='function'){
+   const entry=panel.animate([{opacity:0,transform:'translateY(12px)'},{opacity:1,transform:'translateY(0)'}],{duration:300,easing:'cubic-bezier(.22,1,.36,1)',fill:'both'});
+   const heading=title.animate([{opacity:0,transform:'translateY(4px)'},{opacity:1,transform:'translateY(0)'}],{duration:220,easing:'ease-out',fill:'both'});
+   panelTransition=entry;titleTransition=heading;
+   entry.finished.then(()=>{entry.cancel();if(panelTransition===entry)panelTransition=null}).catch(()=>{});
+   heading.finished.then(()=>{heading.cancel();if(titleTransition===heading)titleTransition=null}).catch(()=>{});
+  }
+  if(view==='admins')loadAdmins();
+ }
+ $('[data-view="products"]').setAttribute('aria-current','page');
+ $$('.nav-item').forEach(button=>button.addEventListener('click',()=>switchAdminView(button.dataset.view)));
+
  $('#save-all').addEventListener('click',async()=>{if(preview)return;const b=$('#save-all');b.disabled=true;b.textContent='Publishing…';try{const r=await api('admin-data',{method:'PUT',body:JSON.stringify({data:state.data,sha:state.sha})});state.sha=r.sha;state.dirty=false;$('#save-status').textContent='Published';toast('Changes published. Netlify is rebuilding the website.')}catch(err){toast(err.message)}finally{b.disabled=false;b.textContent='Save changes'}});
  $('#logout').addEventListener('click',async()=>{if(!preview)await api('admin-auth',{method:'DELETE'});location.reload()});
  addEventListener('beforeunload',e=>{if(state.dirty){e.preventDefault();e.returnValue=''}});boot();
