@@ -68,3 +68,14 @@ Admin sidebar navigation also fades/slides in the selected Products, Invoices, C
 The homepage has an early CSS entrance with a gentle background reveal and staggered headline/action transitions. The hero image is preloaded; native cross-document transitions suppress the separate homepage entrance to avoid stacked effects, and reduced-motion visitors see the content immediately. The supplied fireworks photograph replaces the abstract story graphic after conservative denoising, contrast/colour correction, and sharpening. The optimized WebP is packaged in an SVG image asset for the text-based repository upload workflow.
 
 Regina-specific seasonal-sales/bylaw banners and dates were replaced with White City ordering and pickup instructions. Public pickup footers now say White City and ask visitors to call for the exact location; the old Regina directions link was removed from the homepage. No exact White City street address was supplied, so none was invented. General safety, fire-ban, and local-law guidance remains. Existing admin-managed business/billing address data is unchanged.
+
+### Printable product asset tags
+
+Open **Asset tags** in the admin sidebar. Tags derive directly from the current catalogue (including hidden products), so adding, editing or removing a product updates the available labels automatically. No separate label records or server migration are needed. Save changes to persist catalogue edits for future visits.
+
+- Default stock: Letter, 30 labels (3 × 10), 1 inch × 2⅝ inch, Avery 5160 / 8160 layout.
+- Labels display Regina Fireworks, product name, product code and the catalogue price in CAD; missing prices show “Call for price.”
+- Search and select products, set 0–99 copies per product, or choose a starting label position for a partly used first sheet. Selection/copies reset on reload; maximum 3,000 labels per job.
+- Preview, then Print / Save PDF. Choose Letter, 100% / Actual size, no margins, and turn browser headers/footers off. Always test alignment on plain paper before printing label stock.
+- Print layout is isolated in an iframe to avoid affecting invoice printing.
+- Browser regression test: serve the repository at port 8765, then run `node tests/labels.cjs` with Playwright available and Chromium installed (`CHROMIUM_PATH` can override its path). Covers all catalogue labels, copy counts, partial sheets, product add/remove, escaping, clipping, print invocation and mobile layout.
