@@ -8,6 +8,7 @@
   "email": "test@reginafireworks.ca",
   "products": [
     {
+      "barcode": "RF242455861228",
       "name": "10 Ball Roman Candle Multi",
       "code": "026",
       "category": "roman-candles-consumer-fireworks",
@@ -20,6 +21,7 @@
       "image": "https://reginafireworks.ca/userdata/products/a151e5f17255792f545acf27e73dd9da.jpg"
     },
     {
+      "barcode": "RF207185449608",
       "name": "15 Ball Dragon Candle",
       "code": "040",
       "category": "roman-candles-consumer-fireworks",
@@ -32,6 +34,7 @@
       "image": "https://reginafireworks.ca/userdata/products/7871a8f2ebd1974c416782b10e7fe196.jpg"
     },
     {
+      "barcode": "RF182092977020",
       "name": "Gold Comet Candle",
       "code": "022",
       "category": "roman-candles-consumer-fireworks",
@@ -44,6 +47,7 @@
       "image": "https://reginafireworks.ca/userdata/products/01c28fbffc9209e83611f444653c15de.jpg"
     },
     {
+      "barcode": "RF533502598763",
       "name": "Crackling Comet Candle",
       "code": "023",
       "category": "roman-candles-consumer-fireworks",
@@ -56,6 +60,7 @@
       "image": "https://reginafireworks.ca/userdata/products/0c9d1857bb0d09eda44802860dfcb048.jpg"
     },
     {
+      "barcode": "RF029401573053",
       "name": "Screaming Banshee",
       "code": "036",
       "category": "roman-candles-consumer-fireworks",
@@ -68,6 +73,7 @@
       "image": "https://reginafireworks.ca/userdata/products/8c21e1fa3d3dc16eaa751b5ae13ece1b.jpg"
     },
     {
+      "barcode": "RF476655783582",
       "name": "Paradise Birds",
       "code": "051",
       "category": "roman-candles-consumer-fireworks",
@@ -80,6 +86,7 @@
       "image": "https://reginafireworks.ca/userdata/products/45e7c9c5ed6407346f24720fc408cb35.jpg"
     },
     {
+      "barcode": "RF879052228175",
       "name": "Bloom Flower Candle",
       "code": "030",
       "category": "roman-candles-consumer-fireworks",
@@ -92,6 +99,7 @@
       "image": "https://reginafireworks.ca/userdata/products/4d122ae5d680191aea61211d68156243.jpg"
     },
     {
+      "barcode": "RF448308305850",
       "name": "Mini Air Bomb",
       "code": "080",
       "category": "sound-shells",
@@ -104,6 +112,7 @@
       "image": "https://reginafireworks.ca/userdata/products/cc07214a106f990d2a90c23879f46b96.jpg"
     },
     {
+      "barcode": "RF741579793127",
       "name": "Banger Assortment 4/pk",
       "code": "021",
       "category": "sound-shells",
@@ -116,6 +125,7 @@
       "image": "https://reginafireworks.ca/userdata/products/d794ce79f4750bdad4ff6c0f75903284.jpg"
     },
     {
+      "barcode": "RF751744042453",
       "name": "Crackling Bomb 4/pk",
       "code": "013",
       "category": "sound-shells",
@@ -128,6 +138,7 @@
       "image": "https://reginafireworks.ca/userdata/products/9369319c81ae2b33a09525ed34345980.jpg"
     },
     {
+      "barcode": "RF527412826892",
       "name": "Silver Butterfly",
       "code": "072",
       "category": "barrages-en",
@@ -140,6 +151,7 @@
       "image": "https://reginafireworks.ca/userdata/products/38af80e772df6bd3bb9354b7e6af3440.jpg"
     },
     {
+      "barcode": "RF824482555484",
       "name": "Gold Cluster",
       "code": "070",
       "category": "barrages-en",
@@ -152,6 +164,7 @@
       "image": "https://reginafireworks.ca/userdata/products/1f02e7e5f6a23a3e42bab45cd8e36302.jpg"
     },
     {
+      "barcode": "RF535131379218",
       "name": "Basket Of Cherries",
       "code": "069",
       "category": "barrages-en",
@@ -164,6 +177,7 @@
       "image": "https://reginafireworks.ca/userdata/products/6254d91cd5329f9a15d423150c6d4aaa.jpg"
     },
     {
+      "barcode": "RF439167058937",
       "name": "Irish Splendor",
       "code": "079",
       "category": "barrages-en",
@@ -176,6 +190,7 @@
       "image": "https://reginafireworks.ca/userdata/products/aecf48de97a63a1aabc908b409685b02.jpg"
     },
     {
+      "barcode": "RF627704766191",
       "name": "Blue Butterfly",
       "code": "078",
       "category": "barrages-en",
@@ -188,6 +203,7 @@
       "image": "https://reginafireworks.ca/userdata/products/27dcc69951b78082889d7f8b19d78bbe.jpg"
     },
     {
+      "barcode": "RF668938690049",
       "name": "Crackling Barrage",
       "code": "084",
       "category": "barrages-en",
@@ -200,6 +216,7 @@
       "image": "https://reginafireworks.ca/userdata/products/5a155c2b576f2bfa5d5b69624879b673.jpg"
     },
     {
+      "barcode": "RF114320015551",
       "name": "Dance Of Light",
       "code": "082",
       "category": "barrages-en",
@@ -212,6 +229,7 @@
       "image": "https://reginafireworks.ca/userdata/products/ad4c21e11c8c381c22c78639a240ec26.jpg"
     },
     {
+      "barcode": "RF668240142195",
       "name": "Blue Peony",
       "code": "173",
       "category": "maximum-load-mortars",
@@ -224,6 +242,7 @@
       "image": "https://reginafireworks.ca/userdata/products/9b5dd9e600b657031e462a4360a0d58c.jpg"
     },
     {
+      "barcode": "RF533455426785",
       "name": "Colorful Dahlia",
       "code": "065",
       "category": "maximum-load-mortars",
@@ -236,6 +255,7 @@
       "image": "https://reginafireworks.ca/userdata/products/a125a9245d3f9dd1b54257f5c6d029ca.jpg"
     },
     {
+      "barcode": "RF453648175666",
       "name": "Purple Dahlia",
       "code": "064",
       "category": "maximum-load-mortars",
@@ -248,6 +268,7 @@
       "image": "https://reginafireworks.ca/userdata/products/5d38153cb1f1cea32b786ac8142802ff.jpg"
     },
     {
+      "barcode": "RF689579315467",
       "name": "Red Burst Volcano",
       "code": "063",
       "category": "maximum-load-mortars",
@@ -260,6 +281,7 @@
       "image": "https://reginafireworks.ca/userdata/products/07c2bf9083214eb084789cf73a855e96.jpg"
     },
     {
+      "barcode": "RF689101855153",
       "name": "Eldorado",
       "code": "062",
       "category": "maximum-load-mortars",
@@ -272,6 +294,7 @@
       "image": "https://reginafireworks.ca/userdata/products/70609a4b1aa53f523990d45e342a4bef.jpg"
     },
     {
+      "barcode": "RF848644624263",
       "name": "Silverado",
       "code": "061",
       "category": "maximum-load-mortars",
@@ -284,6 +307,7 @@
       "image": "https://reginafireworks.ca/userdata/products/d6aef31587315e5c9d983b67c5fdab07.jpg"
     },
     {
+      "barcode": "RF440810823257",
       "name": "Silver Palm",
       "code": "177",
       "category": "maximum-load-mortars",
@@ -296,6 +320,7 @@
       "image": "https://reginafireworks.ca/userdata/products/a4f2728a6221a3f73d4b4baa9da346db.jpg"
     },
     {
+      "barcode": "RF165602848368",
       "name": "Colour Peony",
       "code": "156",
       "category": "maximum-load-mortars",
@@ -308,6 +333,7 @@
       "image": "https://reginafireworks.ca/userdata/products/107681521bbf313ced83a7679a036557.jpg"
     },
     {
+      "barcode": "RF540414424708",
       "name": "Green Peony",
       "code": "155",
       "category": "maximum-load-mortars",
@@ -320,6 +346,7 @@
       "image": "https://reginafireworks.ca/userdata/products/73203532c6aed7dba4f6f715d7d183d1.jpg"
     },
     {
+      "barcode": "RF418543014359",
       "name": "Red Peony",
       "code": "154",
       "category": "maximum-load-mortars",
@@ -332,6 +359,7 @@
       "image": "https://reginafireworks.ca/userdata/products/23902b1f778d228cfd2c4973c67a9404.jpg"
     },
     {
+      "barcode": "RF163578367897",
       "name": "Crackling Flying Fishes",
       "code": "188",
       "category": "maximum-load-mortars",
@@ -344,6 +372,7 @@
       "image": "https://reginafireworks.ca/userdata/products/fb09e87f35ddd172ad2daa7a9932f9e7.jpg"
     },
     {
+      "barcode": "RF050617329817",
       "name": "Multi-Color Flying Fishes",
       "code": "183",
       "category": "maximum-load-mortars",
@@ -356,6 +385,7 @@
       "image": "https://reginafireworks.ca/userdata/products/2941057b169972ba044f00720b3f1eb5.jpg"
     },
     {
+      "barcode": "RF144724592892",
       "name": "Green Color Flying Fishes",
       "code": "181",
       "category": "maximum-load-mortars",
@@ -368,6 +398,7 @@
       "image": "https://reginafireworks.ca/userdata/products/6750c2d852be896d0742513ba8a34798.jpg"
     },
     {
+      "barcode": "RF750531082699",
       "name": "Blue Flying Fishes",
       "code": "180",
       "category": "maximum-load-mortars",
@@ -380,6 +411,7 @@
       "image": "https://reginafireworks.ca/userdata/products/7478a2c032fd2996c49bfa50e7ab6cce.jpg"
     },
     {
+      "barcode": "RF961675828432",
       "name": "Red Flying Fishes",
       "code": "179",
       "category": "maximum-load-mortars",
@@ -392,6 +424,7 @@
       "image": "https://reginafireworks.ca/userdata/products/110d89522aa0b5c2a9cfb25358e2c4f5.jpg"
     },
     {
+      "barcode": "RF428741134502",
       "name": "Brocade Crown to Red",
       "code": "",
       "category": "maximum-load-mortars",
@@ -404,6 +437,7 @@
       "image": "https://reginafireworks.ca/userdata/products/5fa22aec0b5d5b96836b8f6e2b1e00b0.jpg"
     },
     {
+      "barcode": "RF345058061702",
       "name": "Brocade Crown to Green",
       "code": "",
       "category": "maximum-load-mortars",
@@ -416,6 +450,7 @@
       "image": "https://reginafireworks.ca/userdata/products/0b9c3e568eb3fb528d07c5530c7e30ad.jpg"
     },
     {
+      "barcode": "RF818605221253",
       "name": "Golden Willow to Red",
       "code": "Golden  Willow to Red",
       "category": "maximum-load-mortars",
@@ -428,6 +463,7 @@
       "image": "https://reginafireworks.ca/userdata/products/52c2753c67c46ca4eb3ef663a843e5f1.jpg"
     },
     {
+      "barcode": "RF924096802966",
       "name": "Gold Willow to White Glitter",
       "code": "",
       "category": "maximum-load-mortars",
@@ -440,6 +476,7 @@
       "image": "https://reginafireworks.ca/userdata/products/0629c1267541ad2ea9ae1cc9771901a7.jpg"
     },
     {
+      "barcode": "RF769895303754",
       "name": "Gold Willow to Blue",
       "code": "",
       "category": "maximum-load-mortars",
@@ -452,6 +489,7 @@
       "image": "https://reginafireworks.ca/userdata/products/c4bdf63aaa43c44f2c1a591694eaf9b5.jpg"
     },
     {
+      "barcode": "RF451177654213",
       "name": "White Glitter Willow",
       "code": "",
       "category": "maximum-load-mortars",
@@ -464,6 +502,7 @@
       "image": "https://reginafireworks.ca/userdata/products/d0e7807c46a357c134f6d8b18c8e41a4.jpg"
     },
     {
+      "barcode": "RF367975154941",
       "name": "Purple with Green Glitter",
       "code": "",
       "category": "maximum-load-mortars",
@@ -476,6 +515,7 @@
       "image": "https://reginafireworks.ca/userdata/products/b8657b445ecc6a778428fde148032d7b.jpg"
     },
     {
+      "barcode": "RF474360369375",
       "name": "Starshell",
       "code": "",
       "category": "maximum-load-mortars",
@@ -488,6 +528,7 @@
       "image": "https://reginafireworks.ca/userdata/products/cdb6bd19c20fa0106c8a0ed1614c6293.jpg"
     },
     {
+      "barcode": "RF633024150266",
       "name": "Royal Palm",
       "code": "",
       "category": "maximum-load-mortars",
@@ -500,6 +541,7 @@
       "image": "https://reginafireworks.ca/userdata/products/86bd9db637e3b14fcd8787aff2015965.jpg"
     },
     {
+      "barcode": "RF867959600309",
       "name": "Palm Tree",
       "code": "",
       "category": "maximum-load-mortars",
@@ -512,6 +554,7 @@
       "image": "https://reginafireworks.ca/userdata/products/8e1e10608394e803ff18ff338ffe8531.jpg"
     },
     {
+      "barcode": "RF843567373086",
       "name": "Artists Dream",
       "code": "055",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -524,6 +567,7 @@
       "image": "https://reginafireworks.ca/userdata/products/2f14270d407cd9eb6b6a4d6ed0db7618.jpg"
     },
     {
+      "barcode": "RF777470656478",
       "name": "Cracker Jack",
       "code": "054",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -536,6 +580,7 @@
       "image": "https://reginafireworks.ca/userdata/products/a4564ac37b74ecd29466602b7b3d5c16.jpg"
     },
     {
+      "barcode": "RF007709755358",
       "name": "Lunar Storm",
       "code": "053",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -548,6 +593,7 @@
       "image": "https://reginafireworks.ca/userdata/products/ac83494ae64d61d7d2d98fd283d677fb.jpg"
     },
     {
+      "barcode": "RF001678888848",
       "name": "Twilight",
       "code": "052",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -560,6 +606,7 @@
       "image": "https://reginafireworks.ca/userdata/products/f92597165ea5dde30765bf0663897210.jpg"
     },
     {
+      "barcode": "RF329010912439",
       "name": "911",
       "code": "#369",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -572,6 +619,7 @@
       "image": "https://reginafireworks.ca/userdata/products/f85b6ddf3248f965b85560c9c6ef98b4.jpg"
     },
     {
+      "barcode": "RF350084201952",
       "name": "Wizard",
       "code": "",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -584,6 +632,7 @@
       "image": "https://reginafireworks.ca/userdata/products/954e1e894c76e47c579c1178e1d24e12.jpg"
     },
     {
+      "barcode": "RF160395973462",
       "name": "Constellation",
       "code": "",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -596,6 +645,7 @@
       "image": "https://reginafireworks.ca/userdata/products/bf9d8f88bd6c0a5bf1a45eda1b7882f9.jpg"
     },
     {
+      "barcode": "RF444077691305",
       "name": "Sky Blaster",
       "code": "",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -608,6 +658,7 @@
       "image": "https://reginafireworks.ca/userdata/products/0f873c77f7b226a1d07150b6d71eab3a.jpg"
     },
     {
+      "barcode": "RF875571202747",
       "name": "Blinking Waterfall",
       "code": "",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -620,6 +671,7 @@
       "image": "https://reginafireworks.ca/userdata/products/676812957763a822f8235cec7eed92ef.jpg"
     },
     {
+      "barcode": "RF868824409480",
       "name": "Tornado",
       "code": "",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -632,6 +684,7 @@
       "image": "https://reginafireworks.ca/userdata/products/ff67a464f3fb62d860e8f8de5e5195b5.jpg"
     },
     {
+      "barcode": "RF447843408848",
       "name": "Royal Burst",
       "code": "",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -644,6 +697,7 @@
       "image": "https://reginafireworks.ca/userdata/products/920dfa04eaa92ee3121fc7c44515dcda.jpg"
     },
     {
+      "barcode": "RF304327972342",
       "name": "Spring Garden",
       "code": "368",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -656,6 +710,7 @@
       "image": "https://reginafireworks.ca/userdata/products/f0300e36f5a26098d7547f194f630b99.jpg"
     },
     {
+      "barcode": "RF252728394657",
       "name": "Devil Tatoo",
       "code": "140",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -668,6 +723,7 @@
       "image": "https://reginafireworks.ca/userdata/products/ece77bc3a5dc6344c19cb7e094b8da8c.jpg"
     },
     {
+      "barcode": "RF553025777796",
       "name": "Go Fish",
       "code": "122",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -680,6 +736,7 @@
       "image": "https://reginafireworks.ca/userdata/products/0ccdfae6c7be75e466d7c2cba2cc550e.jpg"
     },
     {
+      "barcode": "RF793993266664",
       "name": "Diablo",
       "code": "141",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -692,6 +749,7 @@
       "image": "https://reginafireworks.ca/userdata/products/b79b2b41ed26b0a1b67f71531fd492bd.jpg"
     },
     {
+      "barcode": "RF625223300314",
       "name": "Sky Tracer",
       "code": "153",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -704,6 +762,7 @@
       "image": "https://reginafireworks.ca/userdata/products/75c32edecb50d86d200ae71087ad7d02.jpg"
     },
     {
+      "barcode": "RF381241004058",
       "name": "Green Monster",
       "code": "145",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -716,6 +775,7 @@
       "image": "https://reginafireworks.ca/userdata/products/abadf49afdefe5943921df0b764cc7a0.jpg"
     },
     {
+      "barcode": "RF779854145495",
       "name": "100 Shots Perseids",
       "code": "159",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -728,6 +788,7 @@
       "image": "https://reginafireworks.ca/userdata/products/a453e16b4e0faaec49131abf3db09cc2.jpg"
     },
     {
+      "barcode": "RF875480814960",
       "name": "The Grand Finale",
       "code": "144",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -740,6 +801,7 @@
       "image": "https://reginafireworks.ca/userdata/products/c723fc9bb8fc799878ee3ece7ddb14dc.jpg"
     },
     {
+      "barcode": "RF362565989138",
       "name": "Screaming Eagle",
       "code": "143",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -752,6 +814,7 @@
       "image": "https://reginafireworks.ca/userdata/products/a87e588a69a8eaa7324d5415168bd53a.jpg"
     },
     {
+      "barcode": "RF738627552333",
       "name": "Go Fish",
       "code": "",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -764,6 +827,7 @@
       "image": "https://reginafireworks.ca/userdata/products/5833c944afc2f20e9dd86f4f94d23400.jpg"
     },
     {
+      "barcode": "RF153416929226",
       "name": "Fantasia",
       "code": "",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -776,6 +840,7 @@
       "image": "https://reginafireworks.ca/userdata/products/cda2b10eadd43b4431a1678394de97b9.jpg"
     },
     {
+      "barcode": "RF702235472803",
       "name": "Master Blaster",
       "code": "#356",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -788,6 +853,7 @@
       "image": "https://reginafireworks.ca/userdata/products/159ec2068a4518dc6d952d26915974c0.jpg"
     },
     {
+      "barcode": "RF726020534591",
       "name": "Gold Rush",
       "code": "#357",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -800,6 +866,7 @@
       "image": "https://reginafireworks.ca/userdata/products/18cb3d0a113e20b2fb6c26fa5850d078.jpg"
     },
     {
+      "barcode": "RF503404363499",
       "name": "Menace",
       "code": "359",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -812,6 +879,7 @@
       "image": "https://reginafireworks.ca/userdata/products/0b18211dbfc02b784b26d44d8d7cff6e.jpg"
     },
     {
+      "barcode": "RF276877895513",
       "name": "Dragon Breath",
       "code": "137",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -824,6 +892,7 @@
       "image": "https://reginafireworks.ca/userdata/products/f232409aa86227598ee5291937392088.jpg"
     },
     {
+      "barcode": "RF168111537680",
       "name": "Brocade Crown",
       "code": "136",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -836,6 +905,7 @@
       "image": "https://reginafireworks.ca/userdata/products/18fd7cc71d638e8a50e092d34699c806.jpg"
     },
     {
+      "barcode": "RF173825504514",
       "name": "Wild Thing",
       "code": "168",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -848,6 +918,7 @@
       "image": "https://reginafireworks.ca/userdata/products/0c2fc5591d1fd3f9b045c8f7f2bb455b.jpg"
     },
     {
+      "barcode": "RF854697811245",
       "name": "Gold Palm",
       "code": "134",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -860,6 +931,7 @@
       "image": "https://reginafireworks.ca/userdata/products/f3803e3e11c94eb9eb4da8295b59bb13.jpg"
     },
     {
+      "barcode": "RF584066166537",
       "name": "Fiesta",
       "code": "129",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -872,6 +944,7 @@
       "image": "https://reginafireworks.ca/userdata/products/a37a9112bfa57521ae30c6c204835d7f.jpg"
     },
     {
+      "barcode": "RF449758649639",
       "name": "Nikko Blue",
       "code": "352",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -884,6 +957,7 @@
       "image": "https://reginafireworks.ca/userdata/products/92fccc76ed4adb1bb8019f34ac807122.jpg"
     },
     {
+      "barcode": "RF869714611675",
       "name": "Pinky Winky",
       "code": "353",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -896,6 +970,7 @@
       "image": "https://reginafireworks.ca/userdata/products/180904cbdc93a33f98ee0a80f70d3a70.jpg"
     },
     {
+      "barcode": "RF504753154424",
       "name": "Solar Storm",
       "code": "131",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -908,6 +983,7 @@
       "image": "https://reginafireworks.ca/userdata/products/6cf9ec21e84f28db3373a7117ce785c2.jpg"
     },
     {
+      "barcode": "RF171321372591",
       "name": "Brocade Palm",
       "code": "138",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -920,6 +996,7 @@
       "image": "https://reginafireworks.ca/userdata/products/8fa7b2827112da23b073d287071ba7f7.jpg"
     },
     {
+      "barcode": "RF674993625687",
       "name": "Color Time Rain",
       "code": "132",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -932,6 +1009,7 @@
       "image": "https://reginafireworks.ca/userdata/products/11b88872cd230dc35b64c2ab1ad7b649.jpg"
     },
     {
+      "barcode": "RF069609054840",
       "name": "The Out Of Space",
       "code": "142",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -944,6 +1022,7 @@
       "image": "https://reginafireworks.ca/userdata/products/9ab280c0d4aa5e2e08d7f08698f6947c.jpg"
     },
     {
+      "barcode": "RF780891895862",
       "name": "Glittering Brocade",
       "code": "",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -956,6 +1035,7 @@
       "image": "https://reginafireworks.ca/userdata/products/efa9cd7a71d366cadf3ff5d41cd52275.jpg"
     },
     {
+      "barcode": "RF117100701829",
       "name": "Malevolent",
       "code": "#350",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -968,6 +1048,7 @@
       "image": "https://reginafireworks.ca/userdata/products/42b8dc6d14938b4999ff4f2a4a960e7f.jpg"
     },
     {
+      "barcode": "RF805951430194",
       "name": "Big Bertha",
       "code": "157",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -980,6 +1061,7 @@
       "image": "https://reginafireworks.ca/userdata/products/0ee25e2b25a63cd59e3b8ddab3c2bb4f.jpg"
     },
     {
+      "barcode": "RF839907358523",
       "name": "Wild One",
       "code": "363",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -992,6 +1074,7 @@
       "image": "https://reginafireworks.ca/userdata/products/b0809c6bd356890cb1550dbd2b0540a6.jpg"
     },
     {
+      "barcode": "RF556047449748",
       "name": "100 Shots 2 Much!",
       "code": "166",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -1004,6 +1087,7 @@
       "image": "https://reginafireworks.ca/userdata/products/2f8aebf9d60e59967a63489a463c7c13.jpg"
     },
     {
+      "barcode": "RF398093200861",
       "name": "100 Shots Extravaganza",
       "code": "152",
       "category": "cakes-bombardos-consumer-fireworks",
@@ -1016,6 +1100,7 @@
       "image": "https://reginafireworks.ca/userdata/products/0db1a1914eff3831620670b2297d26b8.jpg"
     },
     {
+      "barcode": "RF317640216365",
       "name": "Kheops",
       "code": "",
       "category": "angled-cakes",
@@ -1028,6 +1113,7 @@
       "image": "https://reginafireworks.ca/userdata/products/4ba7941ab3bf374f967047d5e13cc5c8.jpg"
     },
     {
+      "barcode": "RF415384290910",
       "name": "Northern Lights",
       "code": "",
       "category": "angled-cakes",
@@ -1040,6 +1126,7 @@
       "image": "https://reginafireworks.ca/userdata/products/3e817465225b17129da2bcaa3833dbb5.jpg"
     },
     {
+      "barcode": "RF103920960568",
       "name": "70 Shots Z Rainbow",
       "code": "151",
       "category": "angled-cakes",
@@ -1052,6 +1139,7 @@
       "image": "https://reginafireworks.ca/userdata/products/2451f179882f2ed96c4ff154f18334f7.jpg"
     },
     {
+      "barcode": "RF001667391407",
       "name": "24 Shots W Factor",
       "code": "146",
       "category": "angled-cakes",
@@ -1064,6 +1152,7 @@
       "image": "https://reginafireworks.ca/userdata/products/2e1ecca914116787de89daebf8c3c25b.jpg"
     },
     {
+      "barcode": "RF496035340198",
       "name": "30 Shots Z Inferno",
       "code": "149",
       "category": "angled-cakes",
@@ -1076,6 +1165,7 @@
       "image": "https://reginafireworks.ca/userdata/products/492a100f70c05ab6c30a5bec1f232267.jpg"
     },
     {
+      "barcode": "RF659566028338",
       "name": "30 Shots Z Fishes",
       "code": "148",
       "category": "angled-cakes",
@@ -1088,6 +1178,7 @@
       "image": "https://reginafireworks.ca/userdata/products/e328b6630ca56dd60e19c7cacd81b89c.jpg"
     },
     {
+      "barcode": "RF743997748676",
       "name": "Whirlwind",
       "code": "362",
       "category": "angled-cakes",
@@ -1100,6 +1191,7 @@
       "image": "https://reginafireworks.ca/userdata/products/be5bde2994796b5733267d0f717c7c94.jpg"
     },
     {
+      "barcode": "RF085654654975",
       "name": "Bazooka",
       "code": "360",
       "category": "angled-cakes",
@@ -1112,6 +1204,7 @@
       "image": "https://reginafireworks.ca/userdata/products/70dfdc83329708df84bdc7f513deb88c.jpg"
     },
     {
+      "barcode": "RF966506437079",
       "name": "Mosaic",
       "code": "",
       "category": "angled-cakes",
@@ -1124,6 +1217,7 @@
       "image": "https://reginafireworks.ca/userdata/products/503daed97944fc7901aa435f84d5515b.jpg"
     },
     {
+      "barcode": "RF143802645245",
       "name": "35 Shots Z & Fan Raid",
       "code": "150",
       "category": "angled-cakes",
@@ -1136,6 +1230,7 @@
       "image": "https://reginafireworks.ca/userdata/products/eec67288be06ab272ad66ced34961c89.jpg"
     },
     {
+      "barcode": "RF021838544975",
       "name": "BEM Jubilee",
       "code": "",
       "category": "angled-cakes",
@@ -1148,6 +1243,7 @@
       "image": "https://reginafireworks.ca/userdata/products/ae974eb36ded1a957b0e0f069290fe80.jpg"
     },
     {
+      "barcode": "RF460129709002",
       "name": "Split Comets",
       "code": "",
       "category": "angled-cakes",
@@ -1160,6 +1256,7 @@
       "image": "https://reginafireworks.ca/userdata/products/be28eeb8d68c8db76519531a67526b61.jpg"
     },
     {
+      "barcode": "RF616244503471",
       "name": "Treasure Chest Kit",
       "code": "",
       "category": "fireworks-kits",
@@ -1172,6 +1269,7 @@
       "image": "https://reginafireworks.ca/userdata/products/dad37eb5a91b00d121aebfe4920c4cfe.jpg"
     },
     {
+      "barcode": "RF569298893069",
       "name": "Fireworks Assorment E",
       "code": "005",
       "category": "fireworks-kits",
@@ -1184,6 +1282,7 @@
       "image": "https://reginafireworks.ca/userdata/products/264d89721dba8648b63175091996b1e9.jpg"
     },
     {
+      "barcode": "RF031522606617",
       "name": "Thunder Display",
       "code": "011",
       "category": "fireworks-kits",
@@ -1196,6 +1295,7 @@
       "image": "https://reginafireworks.ca/userdata/products/4fafcb32a21aa2c7689c603e28fc8f0a.jpg"
     },
     {
+      "barcode": "RF475851465355",
       "name": "Fireworks Assortment F",
       "code": "006",
       "category": "fireworks-kits",
@@ -1208,6 +1308,7 @@
       "image": "https://reginafireworks.ca/userdata/products/cf0ad351cde8232ec03668d929e5b4c9.jpg"
     },
     {
+      "barcode": "RF739196334929",
       "name": "Fiesta Fireworks Assortment",
       "code": "002",
       "category": "fireworks-kits",
@@ -1220,6 +1321,7 @@
       "image": "https://reginafireworks.ca/userdata/products/50a2f9de39adb62e95976b32344c4160.jpg"
     },
     {
+      "barcode": "RF105387809996",
       "name": "Cherry Bomb Box Fireworks Assortment",
       "code": "056",
       "category": "fireworks-kits",
@@ -1232,6 +1334,7 @@
       "image": "https://reginafireworks.ca/userdata/products/89b755042e582d476e1ad26491ccaab6.jpg"
     },
     {
+      "barcode": "RF544447142916",
       "name": "Bem Super Ammo Crate",
       "code": "100",
       "category": "fireworks-kits",
@@ -1244,6 +1347,7 @@
       "image": "https://reginafireworks.ca/userdata/products/83a5d34fe1e9947248394c26d30f2994.jpg"
     },
     {
+      "barcode": "RF061061089434",
       "name": "Dancing Devil 6/pk",
       "code": "182",
       "category": "ground-spinners",
@@ -1256,6 +1360,7 @@
       "image": "https://reginafireworks.ca/userdata/products/ccbcc79efa2223ec7065e5ed713a5646.jpg"
     },
     {
+      "barcode": "RF565667083004",
       "name": "Jumbo Dancing Devil 6/pk",
       "code": "192",
       "category": "ground-spinners",
@@ -1268,6 +1373,7 @@
       "image": "https://reginafireworks.ca/userdata/products/441607b8b832070cdfd0f0442e28ec44.jpg"
     },
     {
+      "barcode": "RF725581900697",
       "name": "Keg Fountain",
       "code": "050",
       "category": "fountains",
@@ -1280,6 +1386,7 @@
       "image": "https://reginafireworks.ca/userdata/products/f0479a8a33f7f7f7fed9cc4533aae7c6.jpg"
     },
     {
+      "barcode": "RF676043943692",
       "name": "Bem 20cm 10/sleeve",
       "code": "207",
       "category": "sparklers-consumer-fireworks",
@@ -1292,6 +1399,7 @@
       "image": "https://reginafireworks.ca/userdata/products/52f219a162b23407a7a9225fbbc2e128.jpg"
     },
     {
+      "barcode": "RF642949056456",
       "name": "Bem 36cm 8/sleeve",
       "code": "212",
       "category": "sparklers-consumer-fireworks",
@@ -1304,6 +1412,7 @@
       "image": "https://reginafireworks.ca/userdata/products/377c9e57f26e50930f2d75d96d4b03a4.jpg"
     },
     {
+      "barcode": "RF293816916937",
       "name": "Bem 61cm 8/sleeve",
       "code": "219",
       "category": "sparklers-consumer-fireworks",
@@ -1316,6 +1425,7 @@
       "image": "https://reginafireworks.ca/userdata/products/43e11dbb1618db01c8d008bd5dfa35c3.jpg"
     },
     {
+      "barcode": "RF774569029212",
       "name": "Bem Colour Fire",
       "code": "225",
       "category": "miscellaneous",
@@ -1328,6 +1438,7 @@
       "image": "https://reginafireworks.ca/userdata/products/ae734beb84e454cdb638bbbd3888cfe2.jpg"
     },
     {
+      "barcode": "RF638336849454",
       "name": "Flying Chinese Lantern Assorted Colours",
       "code": "500-A",
       "category": "miscellaneous",
