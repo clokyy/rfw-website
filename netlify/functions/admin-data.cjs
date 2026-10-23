@@ -14,7 +14,7 @@ function validate(input){
  barcodes.ensure(out.products);return out;
 }
 exports.handler=async event=>{
- const denied=requireAuth(event);if(denied)return denied;
+ const denied=await requireAuth(event);if(denied)return denied;
  try{
   if(event.httpMethod==='GET'){const f=await github(`contents/${filePath}?ref=${encodeURIComponent(BRANCH)}`);const data=JSON.parse(Buffer.from(f.content,'base64').toString());barcodes.ensure(data.products);return json(200,{data,sha:f.sha})}
   if(event.httpMethod==='PUT'){const input=JSON.parse(event.body||'{}'),data=validate(input);const body={message:'Update website content from admin panel',content:Buffer.from(JSON.stringify(data,null,2)+'\n').toString('base64'),branch:BRANCH,sha:input.sha};const r=await github(`contents/${filePath}`,{method:'PUT',body:JSON.stringify(body)});return json(200,{ok:true,sha:r.content.sha,commit:r.commit.html_url})}

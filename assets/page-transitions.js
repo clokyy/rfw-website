@@ -12,7 +12,9 @@
   e.preventDefault();if(leaving)return;leaving=true;entry?.cancel();exit=document.body.animate([{opacity:1},{opacity:0}],{duration:170,easing:'ease-in',fill:'forwards'});
   exit.finished.then(()=>{location.assign(url.href);recovery=setTimeout(restore,2000)}).catch(restore);
  });
- addEventListener('pagereveal',e=>{if(e.viewTransition&&document.documentElement.classList.contains('home-page'))document.documentElement.classList.add('home-native-navigation')});
+ // Moving from a public page to the staff panel intentionally skips native transitions.
+ addEventListener('pageswap',e=>{if(!e.viewTransition)return;e.viewTransition.ready.catch(()=>{});e.viewTransition.finished.catch(()=>{});const next=e.activation?.entry?.url;if(next&&!publicPath(new URL(next,location.href).pathname))e.viewTransition.skipTransition()});
+ addEventListener('pagereveal',e=>{e.viewTransition?.ready.catch(()=>{});e.viewTransition?.finished.catch(()=>{});if(e.viewTransition&&document.documentElement.classList.contains('home-page'))document.documentElement.classList.add('home-native-navigation')});
  addEventListener('pageshow',e=>{restore();if(e.persisted)enter()});
  addEventListener('pagehide',()=>{clearTimeout(recovery)});
  enter();

@@ -1,5 +1,5 @@
 const crypto=require('crypto');
-const {json,getSession,readAdmins,github,BRANCH}=require('./_lib.cjs');
+const {json,authorize,github,BRANCH}=require('./_lib.cjs');
 const DIR='data/invoices';
 const clean=(v,n=200)=>String(v??'').trim().slice(0,n);
 const key=()=>crypto.createHash('sha256').update(process.env.SESSION_SECRET).digest();
@@ -26,9 +26,9 @@ function build(input,site,creator){
  return withPayment({id,number:`RF-${createdAt.slice(0,10).replace(/-/g,'')}-${id.slice(0,8).toUpperCase()}`,createdAt,createdBy:creator.username,creatorName:creator.displayName,creatorId:creator.id||creator.username,currency:'CAD',dueDate:input.dueDate?date(input.dueDate):null,customer:customerDetails(input.customer),seller:{name:'Regina Fireworks',address:clean([site.address_line1,[site.city,site.province,site.postal_code].filter(Boolean).join(', ')].filter(Boolean).join('\n'),1000),phone:site.phone_display,email:site.email},items,subtotal,gstRate:taxRates[0],pstRate:taxRates[1],gst,pst,total:subtotal+gst+pst,notes:clean(input.notes,2000)});
 }
 exports.handler=async event=>{
- const session=getSession(event);if(!session)return json(401,{error:'Authentication required'});
+ const auth=await authorize(event);if(auth.denied)return auth.denied;
  try{
- const owner=String(process.env.ADMIN_USERNAME||'').trim().toLowerCase();const users=await readAdmins();const user=session.u===owner?{username:owner,firstName:process.env.ADMIN_FIRST_NAME,lastName:process.env.ADMIN_LAST_NAME}:users.find(u=>u.username===session.u&&u.id===session.id&&u.active!==false);if(!user)return json(401,{error:'This administrator account is no longer active'});const creator={username:user.username,id:user.id||'environment-owner',displayName:[user.firstName,user.lastName].filter(Boolean).join(' ')||user.username};
+ const user=auth.user;const creator={username:user.username,id:user.id||'environment-owner',displayName:[user.firstName,user.lastName].filter(Boolean).join(' ')||user.username};
  if(event.httpMethod==='GET'){
   const id=event.queryStringParameters?.id;if(id){if(!validId(id))return json(400,{error:'Invalid invoice ID'});return json(200,{invoice:withPayment(decrypt(await read(`${DIR}/${id}.json`)))})}
   let files;try{files=await github(`contents/${DIR}?ref=${encodeURIComponent(BRANCH)}`)}catch(e){if(e.status===404)return json(200,{invoices:[]});throw e}

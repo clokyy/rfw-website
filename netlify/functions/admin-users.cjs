@@ -1,40 +1,39 @@
 const crypto=require('crypto');
-const {json,getSession,readAdmins,writeAdmins,hashPassword}=require('./_lib.cjs');
+const {json,authorize,readAdminFile,writeAdmins,hashPassword}=require('./_lib.cjs');
 const validName=u=>/^[a-z0-9._-]{3,32}$/.test(u);
 const clean=v=>String(v||'').trim().replace(/\s+/g,' ').slice(0,80);
 const displayName=u=>[u.firstName,u.lastName].filter(Boolean).join(' ')||u.username;
-function publicUser(u,extra={}){return {username:u.username,firstName:u.firstName||'',lastName:u.lastName||'',displayName:displayName(u),...extra}}
+function publicUser(u,extra={}){return {username:u.username,firstName:u.firstName||'',lastName:u.lastName||'',displayName:displayName(u),mustChangePassword:u.mustChangePassword===true,...extra}}
 exports.handler=async event=>{
- const session=getSession(event);if(!session)return json(401,{error:'Authentication required'});
+ const auth=await authorize(event);if(auth.denied)return auth.denied;const session=auth.session;
  try{
-  let users=await readAdmins();const owner=String(process.env.ADMIN_USERNAME||'').trim().toLowerCase();
+  const file=auth.users?{users:auth.users,sha:auth.sha}:await readAdminFile();let users=file.users;const owner=String(process.env.ADMIN_USERNAME||'').trim().toLowerCase();
   const ownerUser=publicUser({username:owner,firstName:clean(process.env.ADMIN_FIRST_NAME),lastName:clean(process.env.ADMIN_LAST_NAME)},{role:'Owner',protected:true});
   if(event.httpMethod==='GET'){
    const publicUsers=[ownerUser,...users.map(x=>publicUser(x,{role:'Administrator',createdAt:x.createdAt,createdBy:x.createdBy,protected:false}))];
    const currentUser=publicUsers.find(x=>x.username===session.u)||publicUser({username:session.u},{role:session.role||'Administrator',protected:false});
    return json(200,{current:session.u,currentUser,users:publicUsers});
   }
-  const input=JSON.parse(event.body||'{}');
+  if((event.body||'').length>4000)return json(413,{error:'Administrator request is too large'});const input=JSON.parse(event.body||'{}');
   if(event.httpMethod==='POST'){
-   const username=String(input.username||'').trim().toLowerCase(),password=String(input.password||''),firstName=clean(input.firstName),lastName=clean(input.lastName);
+   const username=String(input.username||'').trim().toLowerCase(),password=crypto.randomBytes(18).toString('base64url'),firstName=clean(input.firstName),lastName=clean(input.lastName);
    if(!validName(username))throw new Error('Username must be 3–32 characters using letters, numbers, dots, dashes, or underscores');
    if(!firstName||!lastName)throw new Error('First name and last name are required');
-   if(password.length<12)throw new Error('Password must be at least 12 characters');
    if(username===owner||users.some(x=>x.username===username))throw new Error('That username already exists');
-   const h=hashPassword(password);users.push({id:crypto.randomUUID(),username,firstName,lastName,salt:h.salt,passwordHash:h.hash,active:true,createdAt:new Date().toISOString(),createdBy:session.u});
-   await writeAdmins(users);return json(201,{ok:true});
+   const h=hashPassword(password);users.push({id:crypto.randomUUID(),username,firstName,lastName,salt:h.salt,passwordHash:h.hash,active:true,mustChangePassword:true,passwordVersion:crypto.randomUUID(),createdAt:new Date().toISOString(),createdBy:session.u});
+   await writeAdmins(users,file.sha);return json(201,{ok:true,username,temporaryPassword:password});
   }
   if(event.httpMethod==='PUT'){
-   const username=String(input.username||'').trim().toLowerCase(),password=String(input.password||''),firstName=input.firstName===undefined?undefined:clean(input.firstName),lastName=input.lastName===undefined?undefined:clean(input.lastName);
+   const username=String(input.username||'').trim().toLowerCase(),password=input.resetPassword===true?crypto.randomBytes(18).toString('base64url'):String(input.password||''),firstName=input.firstName===undefined?undefined:clean(input.firstName),lastName=input.lastName===undefined?undefined:clean(input.lastName);
    const user=users.find(x=>x.username===username);if(!user)throw new Error('Administrator not found');
-   if(password){if(password.length<12)throw new Error('Password must be at least 12 characters');const h=hashPassword(password);user.salt=h.salt;user.passwordHash=h.hash}
+   if(password){if(password.length<12||password.length>128)throw new Error('Password must be between 12 and 128 characters');const h=hashPassword(password);user.salt=h.salt;user.passwordHash=h.hash;user.mustChangePassword=true;user.passwordVersion=crypto.randomUUID()}
    if(firstName!==undefined){if(!firstName)throw new Error('First name is required');user.firstName=firstName}
    if(lastName!==undefined){if(!lastName)throw new Error('Last name is required');user.lastName=lastName}
-   await writeAdmins(users);return json(200,{ok:true});
+   await writeAdmins(users,file.sha);return json(200,{ok:true,...(password?{username,temporaryPassword:password}:{})});
   }
   if(event.httpMethod==='DELETE'){
-   const username=String(input.username||'').trim().toLowerCase();if(username===owner)throw new Error('The owner account cannot be removed');if(username===session.u)throw new Error('You cannot remove your own account');const next=users.filter(x=>x.username!==username);if(next.length===users.length)throw new Error('Administrator not found');await writeAdmins(next);return json(200,{ok:true});
+   const username=String(input.username||'').trim().toLowerCase();if(username===owner)throw new Error('The owner account cannot be removed');if(username===session.u)throw new Error('You cannot remove your own account');const next=users.filter(x=>x.username!==username);if(next.length===users.length)throw new Error('Administrator not found');await writeAdmins(next,file.sha);return json(200,{ok:true});
   }
   return json(405,{error:'Method not allowed'});
- }catch(e){return json(400,{error:e.message||'Request failed'})}
+ }catch(e){return json(e.status===409?409:e.status?503:400,{error:e.status===409?'Administrator accounts changed. Refresh and try again.':e.status?'Administrator storage is temporarily unavailable. Please try again.':e.message||'Request failed'})}
 };

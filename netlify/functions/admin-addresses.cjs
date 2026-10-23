@@ -1,11 +1,9 @@
-const {json,getSession,readAdmins}=require('./_lib.cjs');
+const {json,authorize}=require('./_lib.cjs');
 const clean=(v,n=200)=>String(v??'').trim().slice(0,n);
 exports.handler=async event=>{
- const session=getSession(event);if(!session)return json(401,{error:'Authentication required'});
+ const auth=await authorize(event);if(auth.denied)return auth.denied;
  if(event.httpMethod!=='POST')return json(405,{error:'Method not allowed'});
  try{
-  const owner=String(process.env.ADMIN_USERNAME||'').trim().toLowerCase();
-  if(session.u!==owner){const users=await readAdmins();if(!users.some(u=>u.username===session.u&&u.id===session.id&&u.active!==false))return json(401,{error:'This administrator account is no longer active'})}
   const key=process.env.GEOAPIFY_API_KEY;if(!key)return json(503,{error:'Address suggestions are not configured yet. Enter the address manually, or add GEOAPIFY_API_KEY in Netlify.'});
   if((event.body||'').length>2000)return json(400,{error:'Address search is too long'});
   let input;try{input=JSON.parse(event.body||'{}')}catch{return json(400,{error:'Invalid address search'})}
