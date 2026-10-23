@@ -5,7 +5,11 @@ const clean=(v,n=200)=>String(v??'').trim().slice(0,n);
 const key=()=>crypto.createHash('sha256').update(process.env.SESSION_SECRET).digest();
 function encrypt(value){const iv=crypto.randomBytes(12),c=crypto.createCipheriv('aes-256-gcm',key(),iv);const data=Buffer.concat([c.update(JSON.stringify(value),'utf8'),c.final()]);return {version:1,iv:iv.toString('base64'),tag:c.getAuthTag().toString('base64'),data:data.toString('base64')}}
 function decrypt(value){if(value.version!==1)throw new Error('Unsupported invoice format');const c=crypto.createDecipheriv('aes-256-gcm',key(),Buffer.from(value.iv,'base64'));c.setAuthTag(Buffer.from(value.tag,'base64'));return JSON.parse(Buffer.concat([c.update(Buffer.from(value.data,'base64')),c.final()]).toString('utf8'))}
-async function read(path){const f=await github(`contents/${path}?ref=${encodeURIComponent(BRANCH)}`);return JSON.parse(Buffer.from(f.content,'base64').toString('utf8'))}
+async function readFile(path){const f=await github(`contents/${path}?ref=${encodeURIComponent(BRANCH)}`);return {value:JSON.parse(Buffer.from(f.content,'base64').toString('utf8')),sha:f.sha}}
+async function read(path){return (await readFile(path)).value}
+const validId=id=>/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(id||'');
+const paymentMethods=['cash','e-transfer'];
+function withPayment(invoice){return {status:'unpaid',paymentMethod:null,paidAt:null,paidBy:null,paidByName:null,...invoice}}
 function cents(v){if(!/^\d{1,7}(\.\d{1,2})?$/.test(String(v)))throw new Error('Enter a valid unit price (up to two decimals)');return Math.round(Number(v)*100)}
 function date(v){if(!/^\d{4}-\d{2}-\d{2}$/.test(v)||new Date(v+'T00:00:00Z').toISOString().slice(0,10)!==v)throw new Error('Invalid due date');return v}
 function customerDetails(c){
@@ -19,21 +23,41 @@ function build(input,site,creator){
  const subtotal=items.reduce((s,l)=>s+l.total,0);if(subtotal>100000000)throw new Error('Invoice total exceeds the $1,000,000 limit');
  const taxRates=['gstRate','pstRate'].map(k=>{const v=String(input[k]??(k==='gstRate'?'5':'6'));if(!/^\d{1,2}(\.\d{1,2})?$/.test(v)||Number(v)>25)throw new Error('Tax rates must be between 0 and 25%');return Number(v)});
  const gst=Math.round(subtotal*taxRates[0]/100),pst=Math.round(subtotal*taxRates[1]/100),id=crypto.randomUUID(),createdAt=new Date().toISOString();
- return {id,number:`RF-${createdAt.slice(0,10).replace(/-/g,'')}-${id.slice(0,8).toUpperCase()}`,createdAt,createdBy:creator.username,creatorName:creator.displayName,creatorId:creator.id||creator.username,currency:'CAD',dueDate:input.dueDate?date(input.dueDate):null,customer:customerDetails(input.customer),seller:{name:'Regina Fireworks',address:clean([site.address_line1,[site.city,site.province,site.postal_code].filter(Boolean).join(', ')].filter(Boolean).join('\n'),1000),phone:site.phone_display,email:site.email},items,subtotal,gstRate:taxRates[0],pstRate:taxRates[1],gst,pst,total:subtotal+gst+pst,notes:clean(input.notes,2000)};
+ return withPayment({id,number:`RF-${createdAt.slice(0,10).replace(/-/g,'')}-${id.slice(0,8).toUpperCase()}`,createdAt,createdBy:creator.username,creatorName:creator.displayName,creatorId:creator.id||creator.username,currency:'CAD',dueDate:input.dueDate?date(input.dueDate):null,customer:customerDetails(input.customer),seller:{name:'Regina Fireworks',address:clean([site.address_line1,[site.city,site.province,site.postal_code].filter(Boolean).join(', ')].filter(Boolean).join('\n'),1000),phone:site.phone_display,email:site.email},items,subtotal,gstRate:taxRates[0],pstRate:taxRates[1],gst,pst,total:subtotal+gst+pst,notes:clean(input.notes,2000)});
 }
 exports.handler=async event=>{
  const session=getSession(event);if(!session)return json(401,{error:'Authentication required'});
  try{
  const owner=String(process.env.ADMIN_USERNAME||'').trim().toLowerCase();const users=await readAdmins();const user=session.u===owner?{username:owner,firstName:process.env.ADMIN_FIRST_NAME,lastName:process.env.ADMIN_LAST_NAME}:users.find(u=>u.username===session.u&&u.id===session.id&&u.active!==false);if(!user)return json(401,{error:'This administrator account is no longer active'});const creator={username:user.username,id:user.id||'environment-owner',displayName:[user.firstName,user.lastName].filter(Boolean).join(' ')||user.username};
  if(event.httpMethod==='GET'){
-  const id=event.queryStringParameters?.id;if(id){if(!/^[0-9a-f-]{36}$/.test(id))return json(400,{error:'Invalid invoice ID'});return json(200,{invoice:decrypt(await read(`${DIR}/${id}.json`))})}
+  const id=event.queryStringParameters?.id;if(id){if(!validId(id))return json(400,{error:'Invalid invoice ID'});return json(200,{invoice:withPayment(decrypt(await read(`${DIR}/${id}.json`)))})}
   let files;try{files=await github(`contents/${DIR}?ref=${encodeURIComponent(BRANCH)}`)}catch(e){if(e.status===404)return json(200,{invoices:[]});throw e}
-  const invoices=[];const queue=files.filter(f=>f.type==='file'&&/^[0-9a-f-]{36}\.json$/.test(f.name));await Promise.all(Array.from({length:Math.min(5,queue.length)},async()=>{while(queue.length){const f=queue.shift();const i=decrypt(await read(f.path));invoices.push({id:i.id,number:i.number,createdAt:i.createdAt,createdBy:i.createdBy,creatorName:i.creatorName,customerName:i.customer.name,total:i.total,currency:i.currency})}}));return json(200,{invoices:invoices.sort((a,b)=>b.createdAt.localeCompare(a.createdAt))});
+  const invoices=[];const queue=files.filter(f=>f.type==='file'&&validId(f.name.replace(/\.json$/,''))&&f.name.endsWith('.json'));await Promise.all(Array.from({length:Math.min(5,queue.length)},async()=>{while(queue.length){const f=queue.shift();try{const i=withPayment(decrypt(await read(f.path)));invoices.push({id:i.id,number:i.number,createdAt:i.createdAt,createdBy:i.createdBy,creatorName:i.creatorName,customerName:i.customer.name,total:i.total,currency:i.currency,status:i.status,paymentMethod:i.paymentMethod,paidAt:i.paidAt})}catch(e){if(e.status!==404)throw e}}}));return json(200,{invoices:invoices.sort((a,b)=>b.createdAt.localeCompare(a.createdAt))});
  }
  if(event.httpMethod==='POST'){
   if((event.body||'').length>100000)return json(413,{error:'Invoice request is too large'});const input=JSON.parse(event.body||'{}'),site=await read('data/site.json'),invoice=build(input,site,creator);await github(`contents/${DIR}/${invoice.id}.json`,{method:'PUT',body:JSON.stringify({message:'Create encrypted invoice record [skip ci]',branch:BRANCH,content:Buffer.from(JSON.stringify(encrypt(invoice))+'\n').toString('base64')})});return json(201,{invoice});
  }
+ if(event.httpMethod==='PATCH'||event.httpMethod==='DELETE'){
+  const id=event.queryStringParameters?.id;if(!validId(id))return json(400,{error:'Invalid invoice ID'});
+  if((event.body||'').length>2000)return json(413,{error:'Invoice request is too large'});
+  const input=JSON.parse(event.body||'{}');
+  if(event.httpMethod==='PATCH'&&(input.action!=='mark-paid'||!paymentMethods.includes(input.paymentMethod)))return json(400,{error:'Choose Cash or E-transfer to mark the invoice as paid'});
+  if(event.httpMethod==='DELETE'&&input.confirmNumber===undefined)return json(400,{error:'Confirm the invoice number before removing it'});
+  const path=`${DIR}/${id}.json`,file=await readFile(path),invoice=withPayment(decrypt(file.value));
+  if(event.httpMethod==='DELETE'){
+   if(input.confirmNumber!==invoice.number)return json(400,{error:'Invoice confirmation does not match. Reopen the invoice and try again.'});
+   await github(`contents/${path}`,{method:'DELETE',body:JSON.stringify({message:'Remove encrypted invoice record [skip ci]',branch:BRANCH,sha:file.sha})});
+   return json(200,{removed:true,id});
+  }
+  if(invoice.status==='paid'){
+   if(invoice.paymentMethod!==input.paymentMethod)return json(409,{error:'This invoice has already been marked as paid. Refresh to see its payment details.'});
+   return json(200,{invoice});
+  }
+  const paid={...invoice,status:'paid',paymentMethod:input.paymentMethod,paidAt:new Date().toISOString(),paidBy:creator.username,paidByName:creator.displayName};
+  await github(`contents/${path}`,{method:'PUT',body:JSON.stringify({message:'Mark encrypted invoice as paid [skip ci]',branch:BRANCH,sha:file.sha,content:Buffer.from(JSON.stringify(encrypt(paid))+'\n').toString('base64')})});
+  return json(200,{invoice:paid});
+ }
  return json(405,{error:'Method not allowed'});
- }catch(e){if(e.status===404)return json(404,{error:'Invoice not found'});return json(e.status?502:400,{error:e.status?'Invoice storage is unavailable. Check the GitHub connection and try again.':e.message||'Unable to save invoice'})}
+ }catch(e){if(e.status===404)return json(404,{error:'Invoice not found'});if(e.status===409&&(event.httpMethod==='PATCH'||event.httpMethod==='DELETE'))return json(409,{error:'The invoice changed while you were updating it. Refresh and try again.'});return json(e.status?502:400,{error:e.status?'Invoice storage is unavailable. Check the GitHub connection and try again.':e.message||'Unable to save invoice'})}
 };
 exports._test={build,encrypt,decrypt};
