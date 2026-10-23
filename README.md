@@ -74,8 +74,21 @@ Regina-specific seasonal-sales/bylaw banners and dates were replaced with White 
 Open **Asset tags** in the admin sidebar. Tags derive directly from the current catalogue (including hidden products), so adding, editing or removing a product updates the available labels automatically. No separate label records or server migration are needed. Save changes to persist catalogue edits for future visits.
 
 - Default stock: Letter, 30 labels (3 × 10), 1 inch × 2⅝ inch, Avery 5160 / 8160 layout.
-- Labels display Regina Fireworks, product name, product code and the catalogue price in CAD; missing prices show “Call for price.”
+- Labels display Regina Fireworks, product name, a scannable Code 128 barcode and its internal ID, product code and the catalogue price in CAD; missing prices show “Call for price.”
 - Search and select products, set 0–99 copies per product, or choose a starting label position for a partly used first sheet. Selection/copies reset on reload; maximum 3,000 labels per job.
 - Preview, then Print / Save PDF. Choose Letter, 100% / Actual size, no margins, and turn browser headers/footers off. Always test alignment on plain paper before printing label stock.
 - Print layout is isolated in an iframe to avoid affecting invoice printing.
 - Browser regression test: serve the repository at port 8765, then run `node tests/labels.cjs` with Playwright available and Chromium installed (`CHROMIUM_PATH` can override its path). Covers all catalogue labels, copy counts, partial sheets, product add/remove, escaping, clipping, print invocation and mobile layout.
+
+### Barcode scanning for invoices
+
+The invoice builder is now scan-first. Reprint old plain-text asset tags to use the new barcode format.
+
+- **USB scanner (laptop):** use a Code 128-capable scanner in USB HID / keyboard mode with an Enter suffix. Create an invoice, focus **USB scanner / barcode**, then scan each tag. Each scan adds one unit at the current catalogue price; another scan of the same tag increments its existing line. Unknown IDs do not add a product.
+- **iPhone / camera:** open the invoice builder on the iPhone in Safari over HTTPS, tap **Scan with iPhone / camera**, and allow camera access. Hold one barcode steady. After it is added, tap **Scan next item** to arm the next scan. This prevents a stationary barcode from repeatedly increasing quantity. The phone edits its own invoice; it is not paired as a remote scanner for an invoice open on another computer.
+- Camera decoding uses locally bundled ZXing (not the inconsistent native BarcodeDetector API), and no images/video are uploaded. Camera tracks stop when closed, when the page is hidden, or when an invoice is submitted. USB entry and manual lookup remain available if camera access fails.
+- **Find a product manually** remains as a collapsible fallback. Products without a numeric catalogue price still require entering a unit price before saving. Existing invoice tax, validation, attribution and encrypted-storage behavior is unchanged.
+- Every product has a separate immutable internal ID in the form `RF` plus 12 digits, including products without a product code. Legacy catalogue IDs are derived deterministically until their next catalogue save; new products get random, collision-checked IDs. Edits preserve them, and backend catalogue validation retains IDs and rejects duplicates/invalid values. Save catalogue changes before relying on tags for newly added products. Supplier barcodes / UPCs are not mapped automatically.
+- Barcode SVGs are printed with 10-module quiet zones. Keep Letter / Actual size (100%), no browser headers/footers, and test physical alignment and scanning before printing a batch.
+
+Tests: `node tests/barcodes.cjs` covers barcode ID/persistence/validation. With Playwright and local preview at port 8766 applying the admin CSP, `node tests/scanning.cjs` decodes every generated barcode and checks USB input, quantities, errors and invoice creation. `tests/camera-scanning.cjs` exercises the actual camera decoder using the included vector fixture `tests/fixtures/camera-code128.svg`, ImageMagick and FFmpeg to generate a temporary camera stream, including repeat-scan prevention, permission errors and late-stream cleanup. Real iPhone / USB hardware testing should be done with the intended printer and scanner.
