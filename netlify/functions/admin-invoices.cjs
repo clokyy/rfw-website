@@ -2,9 +2,9 @@ const crypto=require('crypto');
 const {json,authorize,github,BRANCH}=require('./_lib.cjs');
 const DIR='data/invoices';
 const clean=(v,n=200)=>String(v??'').trim().slice(0,n);
-const key=()=>crypto.createHash('sha256').update(process.env.SESSION_SECRET).digest();
-function encrypt(value){const iv=crypto.randomBytes(12),c=crypto.createCipheriv('aes-256-gcm',key(),iv);const data=Buffer.concat([c.update(JSON.stringify(value),'utf8'),c.final()]);return {version:1,iv:iv.toString('base64'),tag:c.getAuthTag().toString('base64'),data:data.toString('base64')}}
-function decrypt(value){if(value.version!==1)throw new Error('Unsupported invoice format');const c=crypto.createDecipheriv('aes-256-gcm',key(),Buffer.from(value.iv,'base64'));c.setAuthTag(Buffer.from(value.tag,'base64'));return JSON.parse(Buffer.concat([c.update(Buffer.from(value.data,'base64')),c.final()]).toString('utf8'))}
+const {encryptRecord,decryptRecord}=require('./lib/crypto.cjs');
+const encrypt=value=>encryptRecord(value,'invoices');
+const decrypt=value=>decryptRecord(value,'invoices');
 async function readFile(path){const f=await github(`contents/${path}?ref=${encodeURIComponent(BRANCH)}`);return {value:JSON.parse(Buffer.from(f.content,'base64').toString('utf8')),sha:f.sha}}
 async function read(path){return (await readFile(path)).value}
 const validId=id=>/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(id||'');

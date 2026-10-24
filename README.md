@@ -9,7 +9,7 @@ A responsive Regina Fireworks redesign with lightweight JavaScript animations, c
 - `/admin/` — custom username/password administration panel
 
 ## Admin-managed content
-The custom admin panel uses a simple username and password. The environment-variable account is the protected owner; after signing in, the owner or another administrator can add, remove, and reset passwords for additional administrators in the dedicated **Administrators** section. Additional accounts include first name, last name, username, and an automatically generated temporary password. Passwords use unique salts and scrypt password hashes. The account records are then encrypted with AES-256-GCM using `SESSION_SECRET` and saved to `data/admin-users.enc.json` through the existing GitHub connection. Keep `SESSION_SECRET` unchanged; changing it makes existing additional-account records unreadable.
+The custom admin panel uses a simple username and password. The environment-variable account is the protected owner; after signing in, only the owner can add, remove, and reset passwords for additional administrators in the dedicated **Administrators** section. Additional accounts include first name, last name, username, and an automatically generated temporary password. Passwords use unique salts and scrypt password hashes. The account records are then encrypted with AES-256-GCM using purpose-separated encryption keys derived from the configured encryption root and saved to `data/admin-users.enc.json` through the existing GitHub connection. Keep `SESSION_SECRET` unchanged; changing it makes existing additional-account records unreadable.
 
 Products and contact details are managed in separate sections. Each product can have a non-negative whole-number inventory value; inventory `0` displays a Sold out ribbon on its public product image, while a blank value leaves inventory untracked. Product editing supports JPG, PNG, WebP, and GIF uploads only, with a 5 MB limit enforced in both the browser and server function.
 
@@ -19,7 +19,7 @@ Website changes are committed to `data/site.json` through a protected Netlify Fu
 Serve the project through a local web server and open `/admin/?preview=1` to preview the dashboard without authentication. Preview mode cannot publish or upload files.
 
 ## Deploy on Netlify
-1. Create a Netlify site from `clokyy/rfw-website`. No build command is required; the publish directory is `.`.
+1. Create a Netlify site from `clokyy/rfw-website`. Use build command `npm run build`, publish directory `public`, and Node 22 (configured in `netlify.toml`). Dependencies must be installed so image processing is available.
 2. In **Project configuration → Environment variables**, add:
    - `ADMIN_USERNAME` — the admin username.
    - `ADMIN_PASSWORD` — a strong admin password.
@@ -27,7 +27,8 @@ Serve the project through a local web server and open `/admin/?preview=1` to pre
    - `GITHUB_TOKEN` — a fine-grained GitHub token restricted to this repository with **Contents: Read and write**.
    - Optional: `ADMIN_FIRST_NAME` and `ADMIN_LAST_NAME` — display name for the protected owner account.
 3. Trigger a new deployment so the functions receive the environment variables.
-4. Open `/admin/` and sign in with the configured username and password.
+4. Open `/admin/`, sign in with the configured username and password, enroll an authenticator app, and securely save your one-time MFA recovery codes. All staff must complete MFA; new staff first change their temporary passwords.
+5. Follow [SECURITY.md](SECURITY.md) for rate-limit verification, independent key setup, data migration, deployment checks and recovery. Do not rotate the original encryption secret without migration.
 
 The credentials and GitHub token remain server-side in Netlify. Never commit them to this repository. The previous GitHub OAuth/Decap setup is no longer used.
 
@@ -43,7 +44,7 @@ Netlify serves the folder routes without `.html`; legacy `/products.html` and `/
 ## Invoices
 The **Invoices** section supports a product-based invoice builder, customer/billing details, quantities, editable unit prices, optional due dates, GST/PST rates, payment notes, and print / Save PDF. Amounts are in CAD; tax rates default to GST 5% and PST 6% and remain editable by the administrator. Saved invoices are immutable snapshots of seller details, products, prices, and creator identity. The server computes totals in integer cents and assigns the signed-in administrator (never a creator supplied by the browser). The invoice register filters by local creation date, administrator, and minimum/maximum order total. All active administrators can view the register.
 
-Invoice records are AES-256-GCM encrypted using `SESSION_SECRET` and saved individually under `data/invoices/<uuid>.json` through the same GitHub token. Keep this secret unchanged and back it up securely; rotating it without migration makes account and invoice records unreadable. Invoice commits use `[skip ci]` to avoid unnecessary website rebuilds. Product/contact changes still require **Save changes**; invoice creation saves immediately and uses the published catalogue. Creating invoices does **not** decrement inventory or collect payment. Local preview invoices are temporary and disappear on refresh. This GitHub-backed register is intended for low-volume use (GitHub directory listings support up to 1,000 files); move invoice storage to a database before approaching that limit.
+Invoice records are AES-256-GCM encrypted using purpose-separated encryption keys derived from the configured encryption root and saved individually under `data/invoices/<uuid>.json` through the same GitHub token. Keep this secret unchanged and back it up securely; rotating it without migration makes account and invoice records unreadable. Invoice commits use `[skip ci]` to avoid unnecessary website rebuilds. Product/contact changes still require **Save changes**; invoice creation saves immediately and uses the published catalogue. Creating invoices does **not** decrement inventory or collect payment. Local preview invoices are temporary and disappear on refresh. This GitHub-backed register is intended for low-volume use (GitHub directory listings support up to 1,000 files); move invoice storage to a database before approaching that limit.
 
 ## Billing address autocomplete (Geoapify)
 Create a Geoapify project at https://myprojects.geoapify.com/ and copy its API key into **Netlify → Project configuration → Environment variables → `GEOAPIFY_API_KEY`**, available to Functions. Redeploy after adding or changing it. The key is only used by the authenticated `admin-addresses` server function and is never returned to the browser or committed to the repository. If using Geoapify key restrictions, allow server-side requests from Netlify (browser-origin-only restrictions will not match this proxy).
@@ -108,3 +109,7 @@ The homepage footer includes a **Staff Panel** button linking to `/admin/`. In *
 New accounts (and reset accounts) must choose a different 12–128-character password and confirm it before viewing or changing panel data. Temporary logins receive a restricted 30-minute session that can only check sign-in state, sign out, or complete password setup. Every protected function checks the account and password version, so bypassing the screen, using an old token after reset, or reloading does not bypass setup. Successful setup updates the salted scrypt hash in the encrypted account record and issues the normal secure eight-hour session. Record writes use an expected GitHub SHA to reject concurrent updates instead of overwriting them. The environment-managed owner and existing accounts without a setup flag keep their existing sign-in behaviour. Resetting your own account signs you out after closing the one-time credentials dialog.
 
 `node tests/admin-onboarding.cjs` tests account creation, one-time credentials, first-sign-in enforcement across all protected endpoints, password validation, legacy accounts, resets, stale/removed/expired sessions, encryption and storage conflicts. `node tests/admin-onboarding-ui.cjs` tests the real function handlers behind mocked storage, first-login/reload flow, credential clearing, mobile layout, failure recovery and the homepage Staff Panel link. Tests never create production accounts.
+
+## Security hardening
+
+Read [SECURITY.md](SECURITY.md) before deployment or key rotation. The public build excludes private data and server source. MFA is required, staff-account management is owner-only, and raster uploads are validated and converted to static WebP. Existing encrypted records remain compatible; separately configured encryption/signing keys are supported. Run `npm ci`, `npm test`, `npm run build`, and `npm run test:ui` (requires Python 3.11+ and Chromium). Live Netlify rate-limit/header checks remain required.

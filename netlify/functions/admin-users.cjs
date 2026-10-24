@@ -14,6 +14,7 @@ exports.handler=async event=>{
    const currentUser=publicUsers.find(x=>x.username===session.u)||publicUser({username:session.u},{role:session.role||'Administrator',protected:false});
    return json(200,{current:session.u,currentUser,users:publicUsers});
   }
+  if(!auth.owner)return json(403,{error:'Only the owner can manage administrator accounts'});
   if((event.body||'').length>4000)return json(413,{error:'Administrator request is too large'});const input=JSON.parse(event.body||'{}');
   if(event.httpMethod==='POST'){
    const username=String(input.username||'').trim().toLowerCase(),password=crypto.randomBytes(18).toString('base64url'),firstName=clean(input.firstName),lastName=clean(input.lastName);

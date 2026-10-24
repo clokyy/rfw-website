@@ -1,5 +1,20 @@
 {
   "name": "regina-fireworks-website",
   "private": true,
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "dependencies": {
+    "sharp": "0.35.5"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "build": "node scripts/build.cjs",
+    "test:security": "node tests/security.cjs",
+    "test": "node scripts/test.cjs",
+    "test:ui": "node scripts/test-ui.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.64.1"
+  }
 }

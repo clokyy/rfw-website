@@ -14,7 +14,7 @@ const base=process.env.RFW_TEST_URL||'http://127.0.0.1:8766';
  const record=storage.invoice(legacy.id);for(const k of ['status','paymentMethod','paidAt','paidBy','paidByName'])delete record[k];storage.seed(record);
  await page.route('**/.netlify/functions/admin-invoices*',async route=>{
   const r=route.request(),url=new URL(r.url()),method=r.method();requests.push(method);if(gate&&['PATCH','DELETE'].includes(method))await gate.promise;
-  const response=await handler({httpMethod:method,headers:{cookie:'rfw_admin='+sign({u:'owner',exp:Date.now()+60000})},body:r.postData(),queryStringParameters:{id:url.searchParams.get('id')||undefined}});
+  const response=await handler({httpMethod:method,headers:{'content-type':'application/json',cookie:storage.security.cookie()},body:r.postData(),queryStringParameters:{id:url.searchParams.get('id')||undefined}});
   await route.fulfill({status:response.statusCode,headers:response.headers,body:response.body});
  });
  const start=async()=>{await page.goto(base+'/admin/?preview');await page.locator('#dashboard').waitFor({state:'visible'});await page.evaluate(data=>document.dispatchEvent(new CustomEvent('rfw-dashboard',{detail:{data,preview:false}})),site);await page.click('[data-view=invoices]');await page.waitForFunction(()=>document.querySelectorAll('#invoice-list [data-invoice-id]').length===3)};

@@ -14,13 +14,15 @@ module.exports=function invoiceStorage(site,users=[]){
    if(state.failWrite){status=state.failWrite;body={message:'Storage unavailable'}}
    else if((current&&request.sha!==current.sha)||(!current&&request.sha)){status=409;body={message:'SHA conflict'}}
    else if(options.method==='DELETE'){state.files.delete(path);body={content:null}}
-   else{const value=JSON.parse(Buffer.from(request.content,'base64').toString());assert.equal(value.version,1);assert(!JSON.stringify(value).includes('Test Customer'));state.files.set(path,{value,sha:`test-${++version}`});body={content:{sha:`test-${version}`}}}
-  }else if(path==='data/admin-users.enc.json')body={content:Buffer.from(JSON.stringify({version:0,users:state.users})).toString('base64')};
+   else{const value=JSON.parse(Buffer.from(request.content,'base64').toString());assert.equal(value.version,2);assert(!JSON.stringify(value).includes('Test Customer'));state.files.set(path,{value,sha:`test-${++version}`});body={content:{sha:`test-${version}`}}}
+  }else if(path==='data/admin-users.enc.json')body={content:Buffer.from(JSON.stringify(require('../../netlify/functions/lib/crypto.cjs').encryptRecord(state.users,'administrators'))).toString('base64')};
   else if(path==='data/site.json')body={content:Buffer.from(JSON.stringify(site)).toString('base64')};
   else if(path==='data/invoices'){
    if(state.files.size)body=[...state.files.keys()].map(path=>({type:'file',name:path.split('/').pop(),path}));else{status=404;body={message:'Not Found'}}
   }else{if(state.removeOnRead===path){state.files.delete(path);state.removeOnRead=null}const f=state.files.get(path);if(f)body={content:Buffer.from(JSON.stringify(f.value)).toString('base64'),sha:f.sha};else{status=404;body={message:'Not Found'}}}
   return {ok:status>=200&&status<300,status,text:async()=>JSON.stringify(body)};
  };
+ state.security=require('./security-storage.cjs')();
+ for(const user of users)state.security.seed(user);
  return state;
 };

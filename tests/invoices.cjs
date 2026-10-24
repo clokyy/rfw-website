@@ -7,14 +7,14 @@ const invoice=_test.build(input,site,{username:'owner',displayName:'Store Owner'
 for(const bad of [{items:[]},{gstRate:-1},{gstRate:26},{dueDate:'2026-02-30'},{items:[{...input.items[0],quantity:0}]},{items:[{...input.items[0],unitPrice:'1.001'}]},{items:[{...input.items[0],name:'Changed product'}]}])assert.throws(()=>_test.build({...input,...bad},site,{username:'owner',displayName:'Store Owner'}));
 const defaultInput={...input};delete defaultInput.gstRate;delete defaultInput.pstRate;const defaultInvoice=_test.build(defaultInput,site,{username:'owner',displayName:'Owner'});assert.equal(defaultInvoice.gstRate,5);assert.equal(defaultInvoice.pstRate,6);assert.equal(defaultInvoice.total,4109);const exempt=_test.build({...input,gstRate:'0',pstRate:'0'},site,{username:'owner',displayName:'Owner'});assert.equal(exempt.total,3702);
 const storage=require('./fixtures/invoice-storage.cjs')(site,[{id:'active-id',username:'cashier',firstName:'Test',lastName:'Cashier',active:true},{id:'disabled-id',username:'disabled',active:false}]);
-const cookie=u=>'rfw_admin='+sign({u:u||'owner',id:u==='cashier'?'active-id':u==='disabled'?'disabled-id':undefined,exp:Date.now()+60000});
-const event=(method,body={},id,user)=>({httpMethod:method,headers:{cookie:cookie(user)},body:JSON.stringify(body),queryStringParameters:id?{id}:undefined});
+const cookie=u=>storage.security.cookie(u?(storage.users.find(x=>x.username===u)||{username:u,id:'removed-id'}):undefined);
+const event=(method,body={},id,user)=>({httpMethod:method,headers:{'content-type':'application/json',cookie:cookie(user)},body:JSON.stringify(body),queryStringParameters:id?{id}:undefined});
 const call=async(method,body,id,user)=>{const r=await handler(event(method,body,id,user));return {status:r.statusCode,...JSON.parse(r.body)}};
 (async()=>{
- assert.equal((await handler({httpMethod:'GET',headers:{}})).statusCode,401);assert.deepEqual((await call('GET')).invoices,[]);
+ assert.equal((await handler({httpMethod:'GET',headers:{'content-type':'application/json'}})).statusCode,401);assert.deepEqual((await call('GET')).invoices,[]);
  const saved=await call('POST',input);assert.equal(saved.status,201);const i=saved.invoice;assert.equal(i.createdBy,'owner');assert.equal(i.creatorName,'owner');assert.equal(i.status,'unpaid');assert.equal((await call('GET')).invoices[0].total,4109);assert.deepEqual((await call('GET',{},i.id)).invoice,i);assert.equal((await call('GET',{},'../site')).status,400);
  for(const method of ['PATCH','DELETE']){
-  assert.equal((await handler({...event(method,{},i.id),headers:{}})).statusCode,401);
+  assert.equal((await handler({...event(method,{},i.id),headers:{'content-type':'application/json'}})).statusCode,401);
   for(const user of ['removed-admin','disabled'])assert.equal((await call(method,{},i.id,user)).status,401);
   for(const id of ['../site','------------------------------------','ffffffff-ffff-ffff-ffff-fffffffffffz'])assert.equal((await call(method,{},id)).status,400);
   const oversized=event(method,{},i.id);oversized.body='x'.repeat(2001);assert.equal((await handler(oversized)).statusCode,413);

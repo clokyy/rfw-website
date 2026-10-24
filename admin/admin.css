@@ -27,3 +27,6 @@
 /* First-sign-in password setup and one-time temporary credentials. */
 .password-setup-card{max-width:520px;width:100%}.password-setup-card h1{font-size:2rem}.password-setup-card small{color:#b9c4d2}.password-signout{margin-top:20px;width:100%;background:transparent;color:#e3ebf5;border:1px solid #526276;min-height:44px}.temporary-password-note{margin:0;padding:16px;border-radius:8px;background:#f0f5fa;font-size:.9rem;color:#425268}.temporary-credentials{display:grid;gap:16px}.temporary-credentials input{font-family:ui-monospace,monospace;font-size:.9rem}.temporary-credentials p{overflow-wrap:anywhere}#temporary-credentials-dialog .modal-actions{flex-wrap:wrap}#temporary-credentials-dialog button{min-height:44px}.password-setup-card .error{margin:0}
 @media(max-width:600px){.password-setup-card{padding:26px 22px}#temporary-credentials-dialog .modal-actions button{width:100%}}
+
+/* Two-step verification */
+.mfa-secret{display:block;overflow-wrap:anywhere;padding:14px;background:#111c30;border-radius:8px;letter-spacing:.08em;user-select:all}.mfa-recovery-codes{white-space:pre-wrap;user-select:all;line-height:1.8;padding:14px;background:#111c30;border-radius:8px;overflow:auto}#mfa-view .login-card{max-width:540px}#mfa-view h2{font-size:1.2rem}
