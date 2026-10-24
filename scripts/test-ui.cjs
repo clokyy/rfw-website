@@ -9,7 +9,7 @@ const root=path.resolve(__dirname,'..'),base=process.env.RFW_TEST_URL||'http://1
    let ready=false;for(let i=0;i<30;i++){try{ready=(await fetch(base+'/')).ok}catch{}if(ready)break;await new Promise(r=>setTimeout(r,200))}
    if(!ready||server.exitCode!==null)throw Error('Test server could not start; set RFW_TEST_URL to an existing local test server');
   }
-  for(const name of ['public-pages','admin-onboarding-ui','invoice-management','labels','scanning','camera-scanning']){
+  for(const name of ['public-pages','admin-onboarding-ui','remember-devices-ui','invoice-management','labels','scanning','camera-scanning']){
    const result=spawnSync(process.execPath,['tests/'+name+'.cjs'],{cwd:root,stdio:'inherit',env:{...process.env,RFW_TEST_URL:base}});
    if(result.status!==0)throw Error(name+' failed');
   }

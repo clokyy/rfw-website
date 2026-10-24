@@ -25,7 +25,7 @@
  $('#mfa-code-form').addEventListener('submit',async event=>{
   event.preventDefault();const button=$('#mfa-verify');button.disabled=true;$('#mfa-error').textContent='';
   try{
-   const result=await api('POST',{code:$('#mfa-code').value});$('#mfa-code-form').reset();clearEnrollment();
+   const result=await api('POST',{code:$('#mfa-code').value,rememberDevice:$('#mfa-remember').checked});$('#mfa-code-form').reset();clearEnrollment();
    if(result.recoveryCodes){$('#mfa-code-form').hidden=true;$('#mfa-status').textContent='Two-step verification is enabled.';$('#mfa-recovery-codes').textContent=result.recoveryCodes.join('\n');$('#mfa-recovery').hidden=false;$('#mfa-continue').focus()}
    else{clear();$('#mfa-view').hidden=true;await finish()}
   }catch(error){$('#mfa-error').textContent=error.message}finally{button.disabled=false}

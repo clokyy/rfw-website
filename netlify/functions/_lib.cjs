@@ -38,6 +38,8 @@ async function requireMfa(auth){
  const {readSecurity,accountKey}=require('./lib/mfa.cjs');
  const security=await readSecurity(),record=security.accounts[accountKey(auth.user)];
  if(!record||record.version!==auth.session.mv)return {denied:json(401,{error:'Two-step verification has changed. Please sign in again.'})};
+ const {sessionValid}=require('./lib/devices.cjs');
+ if(!sessionValid(auth.session,auth.user,auth.owner?'owner':'admin',record))return {denied:json(401,{error:'This remembered browser has expired or was forgotten. Please sign in again.'})};
  return auth;
 }
 function encryptAdmins(users){return encryptRecord(users,'administrators')}

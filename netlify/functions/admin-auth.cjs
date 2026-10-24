@@ -17,5 +17,17 @@ exports.handler=async event=>{
  const ownerOk=safeEqual(username,String(process.env.ADMIN_USERNAME).trim().toLowerCase())&&safeEqual(input.password||'',process.env.ADMIN_PASSWORD);
  if(ownerOk){role='owner';user={username,id:'environment-owner'}}else{try{const users=await readAdmins();user=users.find(x=>x.username===username&&x.active!==false);if(user&&verifyPassword(input.password||'',user))role='admin'}catch{return json(503,{error:'Administrator storage is temporarily unavailable'})}}
  if(!role)return json(401,{error:'Invalid username or password'});
- return json(200,{ok:true,mfaRequired:true,mustChangePassword:user.mustChangePassword===true,username},{'Set-Cookie':sessionCookie(user,role)});
+ const devices=require('./lib/devices.cjs');
+ if(user.mustChangePassword!==true&&devices.hasCookie(event)){
+  try{
+   const {readSecurity,writeSecurity,accountKey}=require('./lib/mfa.cjs'),file=await readSecurity(),record=file.accounts[accountKey(user)];
+   const trusted=devices.consume(record,user,role,event);
+   if(trusted){
+    await writeSecurity(file.accounts,file.sha);
+    return devices.withCookies(json(200,{ok:true,mfaRequired:false,mustChangePassword:false,username},{'Set-Cookie':sessionCookie(user,role,{mfa:true,mv:record.version,td:trusted.id})}),trusted.cookie);
+   }
+  }catch(e){return json(e.status===409?409:503,{error:e.status===409?'Your sign-in changed in another window. Please try again.':'Unable to verify this remembered browser. Please try again.'})}
+ }
+ const response=json(200,{ok:true,mfaRequired:true,mustChangePassword:user.mustChangePassword===true,username},{'Set-Cookie':sessionCookie(user,role)});
+ return devices.hasCookie(event)?devices.withCookies(response,devices.clearCookie()):response;
 };

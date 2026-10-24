@@ -98,6 +98,13 @@
  $$('.nav-item').forEach(button=>button.addEventListener('click',()=>switchAdminView(button.dataset.view)));
 
  $('#save-all').addEventListener('click',async()=>{if(preview)return;const b=$('#save-all');b.disabled=true;b.textContent='Publishing…';try{const r=await api('admin-data',{method:'PUT',body:JSON.stringify({data:state.data,sha:state.sha})});state.sha=r.sha;state.dirty=false;$('#save-status').textContent='Published';toast('Changes published. Netlify is rebuilding the website.')}catch(err){toast(err.message)}finally{b.disabled=false;b.textContent='Save changes'}});
+ $('#forget-devices').addEventListener('click',async()=>{
+  if(preview)return toast('Remembered-device changes are disabled in preview mode');
+  if(!confirm('Forget all remembered browsers for your account? MFA will be required at the next sign-in. Sessions using remembered-browser access will also be signed out.'))return;
+  const button=$('#forget-devices');button.disabled=true;
+  try{const result=await api('admin-mfa',{method:'POST',body:JSON.stringify({action:'forget-devices'})});if(result.signInAgain)await boot();else toast('Remembered browsers forgotten. MFA is required at the next sign-in.')}
+  catch(error){toast(error.message)}finally{button.disabled=false}
+ });
  $('#logout').addEventListener('click',async()=>{if(!preview)await api('admin-auth',{method:'DELETE'});location.reload()});
  addEventListener('beforeunload',e=>{if(state.dirty){e.preventDefault();e.returnValue=''}});boot();
  function escapeHtml(v){return String(v||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}function escapeAttr(v){return escapeHtml(v)}function toDataUrl(file){return new Promise((res,rej)=>{const r=new FileReader;r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(file)})}
