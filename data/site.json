@@ -8,6 +8,19 @@
   "email": "test@reginafireworks.ca",
   "products": [
     {
+      "barcode": "RF573410715857",
+      "name": "test",
+      "code": "",
+      "category": "fountains",
+      "type": "",
+      "price": "5.99",
+      "inventory": null,
+      "details": "",
+      "theme": "blue",
+      "active": true,
+      "image": "/assets/uploads/1792881595836-img-1237.jpg"
+    },
+    {
       "barcode": "RF242455861228",
       "name": "10 Ball Roman Candle Multi",
       "code": "026",
