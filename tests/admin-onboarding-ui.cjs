@@ -26,10 +26,17 @@ const base=process.env.RFW_TEST_URL||'http://127.0.0.1:8766';
  let recovery=[];
  const finishMfa=async()=>{
   await s.locator('#mfa-code-form').waitFor({state:'visible'});assert.equal(await s.locator('#dashboard').isVisible(),false);
-  let code;if(await s.locator('#mfa-enrollment').isVisible())code=require('../netlify/functions/lib/mfa.cjs').totp(await s.locator('#mfa-secret').textContent());else code=recovery.shift();
+  let code;if(await s.locator('#mfa-enrollment').isVisible()){
+   const secret=await s.locator('#mfa-secret').textContent();await s.locator('#mfa-qr').waitFor({state:'visible'});assert.match(await s.locator('#mfa-qr').getAttribute('src'),/^data:image\/svg\+xml/);
+   await s.addScriptTag({url:base+'/admin/vendor/zxing-browser.min.js'});
+   const decoded=await s.evaluate(async()=>new ZXingBrowser.BrowserQRCodeReader().decodeFromImageUrl(document.querySelector('#mfa-qr').src).then(r=>r.getText()));
+   const uri=new URL(decoded);assert.equal(uri.protocol,'otpauth:');assert.equal(uri.hostname,'totp');assert.equal(uri.searchParams.get('secret'),secret);assert.equal(uri.searchParams.get('issuer'),'Regina Fireworks');assert(decodeURIComponent(uri.pathname).includes('new-staff'));
+   await s.setViewportSize({width:390,height:844});assert.equal(await s.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);const box=await s.locator('#mfa-qr').boundingBox();assert(box.width>=200&&box.x>=0&&box.x+box.width<=390);await s.setViewportSize({width:1440,height:1000});
+   code=require('../netlify/functions/lib/mfa.cjs').totp(secret);
+  }else{assert.equal(await s.locator('#mfa-qr').isVisible(),false);assert.equal(await s.locator('#mfa-qr').getAttribute('src'),null);code=recovery.shift();}
   assert(code);await s.fill('#mfa-code',code);await s.click('#mfa-verify');
   if(await s.locator('#mfa-recovery').isVisible()||recovery.length===0){await s.locator('#mfa-recovery').waitFor({state:'visible'});recovery=(await s.locator('#mfa-recovery-codes').textContent()).trim().split('\n');await s.click('#mfa-continue')}
-  await s.locator('#dashboard').waitFor({state:'visible'});assert.equal(await s.locator('#mfa-secret').textContent(),'');assert.equal(await s.locator('#mfa-recovery-codes').textContent(),'');
+  await s.locator('#dashboard').waitFor({state:'visible'});assert.equal(await s.locator('#mfa-secret').textContent(),'');assert.equal(await s.locator('#mfa-qr').getAttribute('src'),null);assert.equal(await s.locator('#mfa-recovery-codes').textContent(),'');
  };
  const enter=async(a,b=a)=>{await s.fill('#password-setup-form [name=newPassword]',a);await s.fill('#password-setup-form [name=confirmPassword]',b);await s.click('#save-new-password')};
  await enter('test-only-new-staff-password','different-test-password');await s.waitForFunction(()=>document.querySelector('#password-setup-error').textContent.includes('do not match'));assert.equal(staff.state.counts['admin-password']||0,0);
@@ -44,6 +51,6 @@ const base=process.env.RFW_TEST_URL||'http://127.0.0.1:8766';
  // Homepage footer button is visible, usable on mobile, and opens the real staff sign-in route.
  const home=await setup(),h=home.page;await h.goto(base+'/');const link=h.locator('footer .staff-panel-button');assert.equal(await link.getAttribute('href'),'/admin/');await link.scrollIntoViewIfNeeded();await h.waitForTimeout(800);await h.screenshot({path:'/data/staff-footer-desktop.png'});await h.setViewportSize({width:390,height:844});await link.scrollIntoViewIfNeeded();await h.waitForTimeout(800);await h.screenshot({path:'/data/staff-footer-mobile.png'});const box=await link.boundingBox();assert(box.height>=44&&box.x>=0&&box.x+box.width<=390);await link.click();await h.waitForURL('**/admin/');await h.locator('#login-view').waitFor({state:'visible'});
  for(const page of pages)assert.deepEqual(await page.evaluate(()=>cspErrors),[]);assert.deepEqual(errors,[]);
- console.log('PASS: admin creation and one-time credential clearing; first-login/reload gate; matching/unique password rules; storage failure recovery; new-password login; reset and sign-out; mobile setup; homepage Staff Panel button; CSP');
+ console.log('PASS: locally generated MFA QR decoded independently, correct account/secret, mobile fit and secret clearing; admin creation and one-time credential clearing; first-login/reload gate; matching/unique password rules; storage failure recovery; new-password login; reset and sign-out; mobile setup; homepage Staff Panel button; CSP');
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exit(1)});

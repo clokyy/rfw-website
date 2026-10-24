@@ -30,3 +30,5 @@
 
 /* Two-step verification */
 .mfa-secret{display:block;overflow-wrap:anywhere;padding:14px;background:#111c30;border-radius:8px;letter-spacing:.08em;user-select:all}.mfa-recovery-codes{white-space:pre-wrap;user-select:all;line-height:1.8;padding:14px;background:#111c30;border-radius:8px;overflow:auto}#mfa-view .login-card{max-width:540px}#mfa-view h2{font-size:1.2rem}
+
+.mfa-qr{display:block;width:280px;max-width:100%;height:auto;aspect-ratio:1;margin:18px auto;background:#fff;border:1px solid #fff;border-radius:8px}.mfa-qr[hidden]{display:none}
